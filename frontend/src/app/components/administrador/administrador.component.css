@@ -174,7 +174,7 @@
   background: white;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .usuarios-table table {
@@ -286,7 +286,7 @@
   background: white;
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .card-header {
@@ -342,7 +342,7 @@
   background: white;
   border-radius: 10px;
   padding: 25px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
@@ -364,7 +364,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -411,7 +411,8 @@
 .reporte-card .btn-group .btn-secondary,
 .card-actions .btn-group .btn-secondary,
 .btn-group .btn-secondary {
-  background: #0b3d91; /* azul oscuro */
+  background: #0b3d91;
+  /* azul oscuro */
   color: #fff;
   padding: 8px 14px;
   border-radius: 6px;

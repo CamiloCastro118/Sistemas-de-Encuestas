@@ -4,30 +4,18 @@
     <div class="sidebar-header">
       <h3>Panel Admin</h3>
     </div>
-    
+
     <nav class="sidebar-nav">
-      <a 
-        (click)="cambiarVista('dashboard')" 
-        [class.active]="vistaActual === 'dashboard'"
-        class="nav-item">
+      <a (click)="cambiarVista('dashboard')" [class.active]="vistaActual === 'dashboard'" class="nav-item">
         Dashboard
       </a>
-      <a 
-        (click)="cambiarVista('usuarios')" 
-        [class.active]="vistaActual === 'usuarios'"
-        class="nav-item">
+      <a (click)="cambiarVista('usuarios')" [class.active]="vistaActual === 'usuarios'" class="nav-item">
         Usuarios
       </a>
-      <a 
-        (click)="cambiarVista('encuestas')" 
-        [class.active]="vistaActual === 'encuestas'"
-        class="nav-item">
+      <a (click)="cambiarVista('encuestas')" [class.active]="vistaActual === 'encuestas'" class="nav-item">
         Encuestas
       </a>
-      <a 
-        (click)="cambiarVista('reportes')" 
-        [class.active]="vistaActual === 'reportes'"
-        class="nav-item">
+      <a (click)="cambiarVista('reportes')" [class.active]="vistaActual === 'reportes'" class="nav-item">
         Reportes
       </a>
     </nav>
@@ -35,11 +23,11 @@
 
   <!-- Contenido principal -->
   <div class="main-content">
-    
+
     <!-- Dashboard -->
     <div *ngIf="vistaActual === 'dashboard'" class="dashboard">
       <h2>Dashboard Administrativo</h2>
-      
+
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-value">{{ estadisticas.totalUsuarios }}</div>
@@ -74,15 +62,11 @@
         <h2>Gestión de Usuarios</h2>
         <button class="btn-primary" (click)="abrirFormularioUsuario()">+ Nuevo Usuario</button>
       </div>
-      
+
       <div class="filters">
-        <input 
-          type="text" 
-          [(ngModel)]="filtroUsuarios" 
-          placeholder="Buscar usuarios..."
-          class="search-input">
+        <input type="text" [(ngModel)]="filtroUsuarios" placeholder="Buscar usuarios..." class="search-input">
       </div>
-      
+
       <div class="usuarios-table">
         <table>
           <thead>
@@ -109,10 +93,7 @@
                 </span>
               </td>
               <td class="acciones">
-                <button 
-                  class="btn-toggle" 
-                  (click)="toggleUsuarioActivo(usuario)"
-                  [class.activar]="!usuario.activo"
+                <button class="btn-toggle" (click)="toggleUsuarioActivo(usuario)" [class.activar]="!usuario.activo"
                   [class.desactivar]="usuario.activo">
                   {{ usuario.activo ? 'Desactivar' : 'Activar' }}
                 </button>
@@ -129,24 +110,20 @@
       <div class="section-header">
         <h2>Gestión de Encuestas</h2>
       </div>
-      
+
       <div class="filters">
-        <input 
-          type="text" 
-          [(ngModel)]="filtroEncuestas" 
-          placeholder="Buscar encuestas..."
-          class="search-input">
+        <input type="text" [(ngModel)]="filtroEncuestas" placeholder="Buscar encuestas..." class="search-input">
       </div>
-      
+
       <div class="encuestas-grid">
         <div *ngFor="let encuesta of encuestasFiltradas" class="encuesta-admin-card">
           <div class="card-header">
             <h4>{{ encuesta.titulo }}</h4>
             <span class="estado-badge" [class]="encuesta.estado">{{ encuesta.estado }}</span>
           </div>
-          
+
           <p class="descripcion">{{ encuesta.descripcion }}</p>
-          
+
           <div class="card-info">
             <div class="info-item">
               <strong>Creada:</strong> {{ encuesta.fechaCreacion | date:'dd/MM/yyyy' }}
@@ -158,11 +135,9 @@
               <strong>Respuestas:</strong> {{ encuesta.respuestas }}
             </div>
           </div>
-          
+
           <div class="card-actions">
-            <select 
-              [value]="encuesta.estado" 
-              (change)="cambiarEstadoEncuesta(encuesta, $any($event.target).value)"
+            <select [value]="encuesta.estado" (change)="cambiarEstadoEncuesta(encuesta, $any($event.target).value)"
               class="estado-select">
               <option value="borrador">Borrador</option>
               <option value="activa">Activa</option>
@@ -177,7 +152,7 @@
     <!-- Reportes -->
     <div *ngIf="vistaActual === 'reportes'" class="reportes-section">
       <h2>Reportes y Analytics</h2>
-      
+
       <div class="reportes-grid">
         <div class="reporte-card">
           <h4>Reporte de Usuarios</h4>
@@ -187,7 +162,7 @@
             <button class="btn-secondary" (click)="$any(exportarReportes)('usuarios','pdf')">Exportar PDF</button>
           </div>
         </div>
-        
+
         <div class="reporte-card">
           <h4>Reporte de Encuestas</h4>
           <p>Análisis de encuestas creadas, respuestas y tendencias</p>
@@ -196,7 +171,7 @@
             <button class="btn-secondary" (click)="$any(exportarReportes)('encuestas','pdf')">Exportar PDF</button>
           </div>
         </div>
-        
+
         <div class="reporte-card">
           <h4>Reporte de Actividad</h4>
           <p>Seguimiento de la actividad del sistema en tiempo real</p>
@@ -217,45 +192,28 @@
       <h3>Nuevo Usuario</h3>
       <button class="btn-close" (click)="cancelarFormUsuario()">×</button>
     </div>
-    
+
     <form (ngSubmit)="guardarUsuario()" #userForm="ngForm" class="user-form">
       <div class="form-group">
         <label for="nombre">Nombre completo</label>
-        <input 
-          type="text" 
-          id="nombre" 
-          name="nombre"
-          [(ngModel)]="nuevoUsuario.nombre" 
-          required 
-          class="form-control">
+        <input type="text" id="nombre" name="nombre" [(ngModel)]="nuevoUsuario.nombre" required class="form-control">
       </div>
-      
+
       <div class="form-group">
         <label for="email">Email</label>
-        <input 
-          type="email" 
-          id="email" 
-          name="email"
-          [(ngModel)]="nuevoUsuario.email" 
-          required 
-          class="form-control">
+        <input type="email" id="email" name="email" [(ngModel)]="nuevoUsuario.email" required class="form-control">
       </div>
-      
+
       <div class="form-group">
         <label for="rol">Rol</label>
-        <select 
-          id="rol" 
-          name="rol"
-          [(ngModel)]="nuevoUsuario.rol" 
-          required 
-          class="form-control">
+        <select id="rol" name="rol" [(ngModel)]="nuevoUsuario.rol" required class="form-control">
           <option value="">Seleccionar rol</option>
           <option value="encuestado">Encuestado</option>
           <option value="directivo">Directivo</option>
           <option value="administrador">Administrador</option>
         </select>
       </div>
-      
+
       <div class="modal-actions">
         <button type="button" class="btn-secondary" (click)="cancelarFormUsuario()">Cancelar</button>
         <button type="submit" class="btn-primary" [disabled]="!userForm.form.valid">Guardar</button>

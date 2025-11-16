@@ -1,0 +1,6 @@
+/* Styles for app component (restored to satisfy Angular build) */
+:host {
+  display: block;
+}
+
+/* Add app-level styles here as needed */

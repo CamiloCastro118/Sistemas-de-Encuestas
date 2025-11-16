@@ -35,7 +35,7 @@ export class DirectivoComponent implements OnInit {
   // Controla que seccion se muestra en pantalla
   vistaActual: 'dashboard' | 'reportes' | 'metricas' | 'configuracion' = 'dashboard';
   Math = Math; // Para poder usar funciones matematicas en el HTML
-  
+
   // Informacion principal que se muestra en el dashboard
   resumenEjecutivo = {
     satisfaccionGeneral: 85,                      // Porcentaje de satisfaccion general
@@ -66,7 +66,7 @@ export class DirectivoComponent implements OnInit {
   };
 
   // servicios  que necesitamos usar
-  constructor(private router: Router) {}  // Router para cambiar de pagina
+  constructor(private router: Router) { }  // Router para cambiar de pagina
 
   ngOnInit(): void {
     this.cargarReportes();
@@ -143,7 +143,7 @@ export class DirectivoComponent implements OnInit {
     };
 
     if (formato === 'json') {
-      descarga(JSON.stringify(reporte, null, 2), `${reporte.titulo.replace(/\s+/g,'-')}-${fecha.toISOString().slice(0,10)}.json`, 'application/json');
+      descarga(JSON.stringify(reporte, null, 2), `${reporte.titulo.replace(/\s+/g, '-')}-${fecha.toISOString().slice(0, 10)}.json`, 'application/json');
       return;
     }
 
@@ -156,14 +156,14 @@ export class DirectivoComponent implements OnInit {
         const values = headers.map(h => {
           const v = reporte.datos[h];
           if (v === null || v === undefined) return '';
-          return String(v).includes(',') || String(v).includes('\n') ? '"' + String(v).replace(/"/g,'""') + '"' : String(v);
+          return String(v).includes(',') || String(v).includes('\n') ? '"' + String(v).replace(/"/g, '""') + '"' : String(v);
         });
         rows.push(values.join(','));
       } else {
         rows.push('key,value');
         for (const k of Object.keys(reporte.datos || {})) rows.push(`${k},${String((reporte.datos as any)[k])}`);
       }
-      descarga(rows.join('\n'), `${reporte.titulo.replace(/\s+/g,'-')}-${fecha.toISOString().slice(0,10)}.csv`);
+      descarga(rows.join('\n'), `${reporte.titulo.replace(/\s+/g, '-')}-${fecha.toISOString().slice(0, 10)}.csv`);
       return;
     }
 
@@ -184,7 +184,7 @@ export class DirectivoComponent implements OnInit {
         styles: { fontSize: 9 }
       });
 
-      doc.save(`${reporte.titulo.replace(/\s+/g,'-')}-${fecha.toISOString().slice(0,10)}.pdf`);
+      doc.save(`${reporte.titulo.replace(/\s+/g, '-')}-${fecha.toISOString().slice(0, 10)}.pdf`);
       return;
     }
   }

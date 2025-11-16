@@ -172,7 +172,7 @@ export class EncuestasService {
         estado: 'activa',
         creadorId: 4,
         preguntas: [
-          { id: 6, texto: '¿Se siente valorado en su trabajo?', tipo: 'multiple', opciones: ['Sí','A veces','No'], requerida: true },
+          { id: 6, texto: '¿Se siente valorado en su trabajo?', tipo: 'multiple', opciones: ['Sí', 'A veces', 'No'], requerida: true },
           { id: 7, texto: '¿Qué mejorarías del ambiente laboral?', tipo: 'abierta', requerida: false }
         ]
       },
@@ -185,7 +185,7 @@ export class EncuestasService {
         estado: 'activa',
         creadorId: 3,
         preguntas: [
-          { id: 8, texto: '¿Usa las herramientas proporcionadas regularmente?', tipo: 'multiple', opciones: ['Sí','No'], requerida: true },
+          { id: 8, texto: '¿Usa las herramientas proporcionadas regularmente?', tipo: 'multiple', opciones: ['Sí', 'No'], requerida: true },
           { id: 9, texto: '¿Qué herramienta considera más útil?', tipo: 'abierta', requerida: false }
         ]
       },
@@ -198,7 +198,7 @@ export class EncuestasService {
         estado: 'activa',
         creadorId: 4,
         preguntas: [
-          { id: 10, texto: '¿La atención fue oportuna?', tipo: 'multiple', opciones: ['Sí','No'], requerida: true },
+          { id: 10, texto: '¿La atención fue oportuna?', tipo: 'multiple', opciones: ['Sí', 'No'], requerida: true },
           { id: 11, texto: 'Comentarios adicionales', tipo: 'abierta', requerida: false }
         ]
       },
@@ -211,7 +211,7 @@ export class EncuestasService {
         estado: 'activa',
         creadorId: 2,
         preguntas: [
-          { id: 12, texto: '¿Qué canal prefiere para noticias internas?', tipo: 'multiple', opciones: ['Email','Intranet','WhatsApp','Otro'], requerida: true }
+          { id: 12, texto: '¿Qué canal prefiere para noticias internas?', tipo: 'multiple', opciones: ['Email', 'Intranet', 'WhatsApp', 'Otro'], requerida: true }
         ]
       }
     ];
@@ -277,31 +277,31 @@ export class EncuestasService {
       ...encuesta,
       id: Math.max(...this.encuestasSubject.value.map(e => e.id)) + 1
     };
-    
+
     const encuestasActuales = this.encuestasSubject.value;
     this.encuestasSubject.next([...encuestasActuales, nuevaEncuesta]);
-    
+
     return of(nuevaEncuesta);
   }
 
   actualizarEncuesta(id: number, encuesta: Partial<Encuesta>): Observable<Encuesta | null> {
     const encuestasActuales = this.encuestasSubject.value;
     const index = encuestasActuales.findIndex(e => e.id === id);
-    
+
     if (index === -1) {
       return of(null);
     }
 
     encuestasActuales[index] = { ...encuestasActuales[index], ...encuesta };
     this.encuestasSubject.next([...encuestasActuales]);
-    
+
     return of(encuestasActuales[index]);
   }
 
   eliminarEncuesta(id: number): Observable<boolean> {
     const encuestasActuales = this.encuestasSubject.value;
     const nuevasEncuestas = encuestasActuales.filter(e => e.id !== id);
-    
+
     if (nuevasEncuestas.length === encuestasActuales.length) {
       return of(false);
     }
@@ -362,7 +362,7 @@ export class EncuestasService {
       estado: encuesta.estado,
       preguntasAnalisis: encuesta.preguntas.map(pregunta => {
         const respuestasPregunta = respuestas.map(r => r.respuestas[pregunta.id]).filter(Boolean);
-        
+
         let analisis: any = {
           preguntaId: pregunta.id,
           texto: pregunta.texto,
@@ -382,8 +382,8 @@ export class EncuestasService {
 
         return analisis;
       }),
-      tiempoPromedioRespuesta: respuestas.length > 0 
-        ? respuestas.reduce((suma, r) => suma + (r.tiempoRespuesta || 0), 0) / respuestas.length 
+      tiempoPromedioRespuesta: respuestas.length > 0
+        ? respuestas.reduce((suma, r) => suma + (r.tiempoRespuesta || 0), 0) / respuestas.length
         : 0
     };
 
@@ -425,31 +425,31 @@ export class EncuestasService {
       ...usuario,
       id: Math.max(...this.usuariosSubject.value.map(u => u.id)) + 1
     };
-    
+
     const usuariosActuales = this.usuariosSubject.value;
     this.usuariosSubject.next([...usuariosActuales, nuevoUsuario]);
-    
+
     return of(nuevoUsuario);
   }
 
   actualizarUsuario(id: number, usuario: Partial<Usuario>): Observable<Usuario | null> {
     const usuariosActuales = this.usuariosSubject.value;
     const index = usuariosActuales.findIndex(u => u.id === id);
-    
+
     if (index === -1) {
       return of(null);
     }
 
     usuariosActuales[index] = { ...usuariosActuales[index], ...usuario };
     this.usuariosSubject.next([...usuariosActuales]);
-    
+
     return of(usuariosActuales[index]);
   }
 
   eliminarUsuario(id: number): Observable<boolean> {
     const usuariosActuales = this.usuariosSubject.value;
     const nuevosUsuarios = usuariosActuales.filter(u => u.id !== id);
-    
+
     if (nuevosUsuarios.length === usuariosActuales.length) {
       return of(false);
     }
@@ -470,7 +470,7 @@ export class EncuestasService {
   // Validar acceso a encuesta con verificaciones de seguridad
   validarAccesoEncuestaSegura(userId: number, encuestaId: number): Observable<SecurityCheck> {
     const sessionId = this.sesionesUsuario.get(userId);
-    
+
     if (!sessionId) {
       return throwError(() => new Error('Sesión no iniciada'));
     }
@@ -480,13 +480,13 @@ export class EncuestasService {
 
   // Responder encuesta con validaciones de seguridad
   responderEncuestaSegura(
-    userId: number, 
-    encuestaId: number, 
-    respuestaData: any, 
+    userId: number,
+    encuestaId: number,
+    respuestaData: any,
     tiempoInicio: Date
   ): Observable<RespuestaCompleta> {
     const sessionId = this.sesionesUsuario.get(userId);
-    
+
     if (!sessionId) {
       return throwError(() => new Error('Sesión no válida'));
     }
@@ -508,7 +508,7 @@ export class EncuestasService {
             fechaCompletado: new Date(),
             tiempoRespuesta
           };
-          
+
           return this.enviarRespuesta(respuestaCompleta).pipe(
             map(result => {
               if (!result.success) {

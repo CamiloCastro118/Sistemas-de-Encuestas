@@ -117,7 +117,7 @@
   background: white;
   padding: 25px;
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
   text-align: center;
 }
 
@@ -180,7 +180,7 @@
   background: white;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   border-left: 4px solid #bdc3c7;
 }
 
@@ -323,7 +323,7 @@
   background: white;
   padding: 25px;
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .reporte-header {
@@ -379,12 +379,33 @@
   gap: 10px;
 }
 
+/* Button grouping and dark-blue export button styles */
+.btn-group {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.reporte-card .btn-group .btn-secondary,
+.reporte-actions .btn-group .btn-secondary,
+.btn-group .btn-secondary {
+  background: #0b3d91;
+  /* azul oscuro */
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 6px;
+}
+
+.btn-group .btn-secondary:hover {
+  background: #082b66;
+}
+
 /* Detalle de reporte */
 .reporte-detalle {
   background: white;
   border-radius: 10px;
   padding: 30px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .detalle-header {
@@ -428,7 +449,7 @@
   background: white;
   padding: 25px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .metrica-header {
@@ -542,7 +563,7 @@
   background: white;
   padding: 30px;
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   max-width: 600px;
 }
 

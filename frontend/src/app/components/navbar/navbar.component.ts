@@ -24,7 +24,7 @@ export class NavbarComponent implements OnInit {
   // Variables que controlan como se ve el menu
   isMenuOpen = false;        // Si el menu esta abierto en celular
   currentRoute = '';         // En que pagina estamos ahora
-  
+
   // Informacion del usuario que esta usando el sistema
   currentUser: any = null;
   avatarValid = true;
@@ -61,15 +61,15 @@ export class NavbarComponent implements OnInit {
   constructor(
     private router: Router,                    // Router para saber en que pagina estamos
     private securityService: SecurityService  // Servicio de seguridad
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Restaurar sesion y obtener informacion del usuario actual
     this.securityService.restoreSession();
     this.updateUserInfo();
-    
+
     // Cuando se carga el componente, hacer estas cosas:
-    
+
     // Estar pendiente de cuando el usuario cambia de pagina
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
@@ -94,7 +94,7 @@ export class NavbarComponent implements OnInit {
           nombre: localStorage.getItem('userName') || 'Usuario',
           role: this.securityService.getUserRole(),
           avatar: 'https://via.placeholder.com/40x40/007bff/white?text=' +
-                  (localStorage.getItem('userName')?.charAt(0).toUpperCase() || 'U')
+            (localStorage.getItem('userName')?.charAt(0).toUpperCase() || 'U')
         };
       } else {
         // Si existe el usuario pero falta avatar, creamos un placeholder
@@ -108,7 +108,7 @@ export class NavbarComponent implements OnInit {
           }
 
           this.currentUser.avatar = 'https://via.placeholder.com/40x40/007bff/white?text=' +
-                                    ((this.currentUser.nombre || this.currentUser.usuario)?.charAt(0).toUpperCase() || 'U');
+            ((this.currentUser.nombre || this.currentUser.usuario)?.charAt(0).toUpperCase() || 'U');
         }
       }
 
@@ -131,7 +131,7 @@ export class NavbarComponent implements OnInit {
 
   get visibleMenuItems(): MenuItem[] {
     if (!this.currentUser) return [];
-    
+
     const userRole = this.securityService.getUserRole();
     return this.menuItems.filter(item => {
       // Mapear roles del sistema a roles del menu
@@ -159,8 +159,8 @@ export class NavbarComponent implements OnInit {
   }
 
   isActiveRoute(route: string): boolean {
-    return this.currentRoute === route || 
-           (route !== '/home' && this.currentRoute.startsWith(route));
+    return this.currentRoute === route ||
+      (route !== '/home' && this.currentRoute.startsWith(route));
   }
 
   logout(): void {
@@ -175,7 +175,7 @@ export class NavbarComponent implements OnInit {
     const role = this.securityService.getUserRole();
     const roleNames: { [key: string]: string } = {
       'user': 'Usuario',
-      'directivo': 'Directivo', 
+      'directivo': 'Directivo',
       'admin': 'Administrador',
       'administrador': 'Administrador'
     };

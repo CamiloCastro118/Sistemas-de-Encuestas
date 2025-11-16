@@ -4,34 +4,22 @@
     <div class="sidebar-header">
       <h3>Panel Directivo</h3>
     </div>
-    
+
     <nav class="sidebar-nav">
-      <a 
-        (click)="cambiarVista('dashboard')" 
-        [class.active]="vistaActual === 'dashboard'"
-        class="nav-item">
+      <a (click)="cambiarVista('dashboard')" [class.active]="vistaActual === 'dashboard'" class="nav-item">
         Dashboard Ejecutivo
       </a>
-      <a 
-        (click)="cambiarVista('reportes')" 
-        [class.active]="vistaActual === 'reportes'"
-        class="nav-item">
+      <a (click)="cambiarVista('reportes')" [class.active]="vistaActual === 'reportes'" class="nav-item">
         Reportes
       </a>
-      <a 
-        (click)="cambiarVista('metricas')" 
-        [class.active]="vistaActual === 'metricas'"
-        class="nav-item">
+      <a (click)="cambiarVista('metricas')" [class.active]="vistaActual === 'metricas'" class="nav-item">
         Métricas por Área
       </a>
-      <a 
-        (click)="cambiarVista('configuracion')" 
-        [class.active]="vistaActual === 'configuracion'"
-        class="nav-item">
+      <a (click)="cambiarVista('configuracion')" [class.active]="vistaActual === 'configuracion'" class="nav-item">
         Configuración
       </a>
     </nav>
-    
+
     <div class="sidebar-footer">
       <button class="nav-button" (click)="navegarAEncuestas()">Ver Encuestas</button>
       <button class="nav-button" (click)="navegarAAdmin()">Panel Admin</button>
@@ -40,7 +28,7 @@
 
   <!-- Contenido principal -->
   <div class="main-content">
-    
+
     <!-- Dashboard Ejecutivo -->
     <div *ngIf="vistaActual === 'dashboard'" class="dashboard">
       <div class="dashboard-header">
@@ -49,7 +37,7 @@
           Última actualización: {{ resumenEjecutivo.ultimaActualizacion | date:'dd/MM/yyyy HH:mm' }}
         </div>
       </div>
-      
+
       <!-- Resumen Ejecutivo -->
       <div class="resumen-ejecutivo">
         <div class="resumen-card principal">
@@ -57,36 +45,34 @@
           <div class="resumen-label">Satisfacción General</div>
           <div class="resumen-tendencia positiva">{{ resumenEjecutivo.tendenciaMensual }}</div>
         </div>
-        
+
         <div class="resumen-card">
           <div class="resumen-valor">{{ resumenEjecutivo.totalRespuestasRecientes }}</div>
           <div class="resumen-label">Respuestas Recientes</div>
           <div class="resumen-descripcion">Últimos 30 días</div>
         </div>
-        
+
         <div class="resumen-card alerta">
           <div class="resumen-label">Atención Requerida</div>
           <div class="resumen-descripcion">{{ resumenEjecutivo.indicadorCritico }}</div>
         </div>
       </div>
-      
+
       <!-- Metricas por area vista rapida -->
       <div class="areas-rapido">
         <h3>Métricas por Área</h3>
         <div class="areas-grid">
-          <div 
-            *ngFor="let area of metricasPorArea" 
-            class="area-card"
+          <div *ngFor="let area of metricasPorArea" class="area-card"
             [class]="obtenerColorSatisfaccion(area.satisfaccion)">
-              <div class="area-header">
-                <h4>{{ area.area }}</h4>
-              </div>
+            <div class="area-header">
+              <h4>{{ area.area }}</h4>
+            </div>
             <div class="area-satisfaccion">{{ area.satisfaccion }}%</div>
             <div class="area-respuestas">{{ area.respuestas }} respuestas</div>
           </div>
         </div>
       </div>
-      
+
       <!-- Acciones rapidas -->
       <div class="acciones-rapidas">
         <h3>Acciones Rápidas</h3>
@@ -116,19 +102,19 @@
             + Generar Reporte Personalizado
           </button>
         </div>
-        
+
         <div class="reportes-grid">
           <div *ngFor="let reporte of reportes" class="reporte-card">
             <div class="reporte-header">
               <h4>{{ reporte.titulo }}</h4>
               <span class="tipo-badge" [class]="reporte.tipo">{{ reporte.tipo }}</span>
             </div>
-            
+
             <p class="reporte-descripcion">{{ reporte.descripcion }}</p>
             <div class="reporte-fecha">
               Generado: {{ reporte.fechaGeneracion | date:'dd/MM/yyyy HH:mm' }}
             </div>
-            
+
             <div class="reporte-actions">
               <button class="btn-outline" (click)="verReporte(reporte)">Ver Detalles</button>
               <div class="btn-group">
@@ -139,24 +125,26 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Detalle del Reporte -->
       <div *ngIf="reporteSeleccionado" class="reporte-detalle">
         <div class="detalle-header">
           <button class="btn-volver" (click)="cerrarReporte()">← Volver</button>
           <h3>{{ reporteSeleccionado.titulo }}</h3>
           <div class="btn-group">
-            <button class="btn-primary" (click)="$any(exportarReporte)(reporteSeleccionado,'csv')">📥 Exportar CSV</button>
-            <button class="btn-primary" (click)="$any(exportarReporte)(reporteSeleccionado,'pdf')">📥 Exportar PDF</button>
+            <button class="btn-primary" (click)="$any(exportarReporte)(reporteSeleccionado,'csv')">📥 Exportar
+              CSV</button>
+            <button class="btn-primary" (click)="$any(exportarReporte)(reporteSeleccionado,'pdf')">📥 Exportar
+              PDF</button>
           </div>
         </div>
-        
+
         <div class="detalle-meta">
           <div><strong>Tipo:</strong> {{ reporteSeleccionado.tipo }}</div>
           <div><strong>Fecha:</strong> {{ reporteSeleccionado.fechaGeneracion | date:'dd/MM/yyyy HH:mm' }}</div>
           <div><strong>Descripción:</strong> {{ reporteSeleccionado.descripcion }}</div>
         </div>
-        
+
         <div class="detalle-datos">
           <h4>Datos del Reporte:</h4>
           <pre>{{ reporteSeleccionado.datos | json }}</pre>
@@ -169,7 +157,7 @@
       <div class="section-header">
         <h2>Métricas Detalladas por Área</h2>
       </div>
-      
+
       <div class="metricas-grid">
         <div *ngFor="let metrica of metricasPorArea" class="metrica-card">
           <div class="metrica-header">
@@ -178,20 +166,18 @@
               {{ obtenerIconoTendencia(metrica.tendencia) }} {{ metrica.tendencia }}
             </span>
           </div>
-          
+
           <div class="metrica-satisfaccion">
             <div class="satisfaccion-numero" [class]="obtenerColorSatisfaccion(metrica.satisfaccion)">
               {{ metrica.satisfaccion }}%
             </div>
             <div class="satisfaccion-barra">
-              <div 
-                class="barra-progreso" 
-                [class]="obtenerColorSatisfaccion(metrica.satisfaccion)"
+              <div class="barra-progreso" [class]="obtenerColorSatisfaccion(metrica.satisfaccion)"
                 [style.width.%]="metrica.satisfaccion">
               </div>
             </div>
           </div>
-          
+
           <div class="metrica-estadisticas">
             <div class="estadistica">
               <span class="estadistica-valor">{{ metrica.respuestas }}</span>
@@ -207,43 +193,33 @@
       <div class="section-header">
         <h2>Configuración del Sistema</h2>
       </div>
-      
+
       <div class="config-form">
         <h3>Preferencias de Reportes</h3>
-        
+
         <div class="config-group">
           <label for="frecuencia">Frecuencia de Reportes Automáticos</label>
-          <select 
-            id="frecuencia" 
-            [(ngModel)]="configuracion.frecuenciaReportes" 
-            class="form-control">
+          <select id="frecuencia" [(ngModel)]="configuracion.frecuenciaReportes" class="form-control">
             <option value="diario">Diario</option>
             <option value="semanal">Semanal</option>
             <option value="mensual">Mensual</option>
             <option value="trimestral">Trimestral</option>
           </select>
         </div>
-        
+
         <div class="config-group">
           <label class="checkbox-label">
-            <input 
-              type="checkbox" 
-              [(ngModel)]="configuracion.notificacionesEmail">
+            <input type="checkbox" [(ngModel)]="configuracion.notificacionesEmail">
             Recibir notificaciones por email
           </label>
         </div>
-        
+
         <div class="config-group">
           <label for="umbral">Umbral de Alerta de Satisfacción (%)</label>
-          <input 
-            type="number" 
-            id="umbral" 
-            [(ngModel)]="configuracion.umbralAlerta" 
-            min="0" 
-            max="100" 
+          <input type="number" id="umbral" [(ngModel)]="configuracion.umbralAlerta" min="0" max="100"
             class="form-control">
         </div>
-        
+
         <div class="config-actions">
           <button class="btn-primary" (click)="guardarConfiguracion()">
             Guardar Configuración

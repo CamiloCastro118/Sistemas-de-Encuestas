@@ -1,6 +1,6 @@
 ﻿<nav class="navbar" *ngIf="isAuthenticated() && currentUser">
   <div class="navbar-container">
-    
+
     <!-- Logo y titulo -->
     <div class="navbar-brand" (click)="navigate('/home')">
       <span class="brand-text">Sistema de Encuestas</span>
@@ -8,10 +8,7 @@
 
     <!-- Menu desktop -->
     <div class="navbar-menu desktop-menu">
-      <a 
-        *ngFor="let item of visibleMenuItems" 
-        (click)="navigate(item.route)"
-        [class.active]="isActiveRoute(item.route)"
+      <a *ngFor="let item of visibleMenuItems" (click)="navigate(item.route)" [class.active]="isActiveRoute(item.route)"
         class="menu-item">
         <span class="item-text">{{ item.label }}</span>
       </a>
@@ -19,16 +16,17 @@
 
     <!-- Usuario y menu movil -->
     <div class="navbar-actions">
-      
+
       <!-- Boton de cerrar sesion prominente -->
       <button class="logout-main-btn" (click)="logout()" title="Cerrar Sesión">
         <span class="logout-text">Salir</span>
       </button>
-      
+
       <!-- Informacion del usuario -->
       <div class="user-info">
         <div class="user-avatar">
-          <img *ngIf="avatarValid && currentUser?.avatar" (error)="onAvatarError()" [src]="currentUser.avatar" [alt]="currentUser.nombre">
+          <img *ngIf="avatarValid && currentUser?.avatar" (error)="onAvatarError()" [src]="currentUser.avatar"
+            [alt]="currentUser.nombre">
           <div *ngIf="!avatarValid || !currentUser?.avatar" class="avatar-placeholder">{{ getUserInitial() }}</div>
         </div>
         <div class="user-details">
@@ -42,33 +40,32 @@
         <button class="user-menu-btn" (click)="toggleMenu()">
           <span class="menu-dots">⋮</span>
         </button>
-        
+
         <div class="user-dropdown" [class.open]="isMenuOpen">
           <div class="dropdown-header">
             <div class="dropdown-user">
-              <img *ngIf="avatarValid && currentUser?.avatar" (error)="onAvatarError()" [src]="currentUser.avatar" [alt]="currentUser.nombre" class="dropdown-avatar">
-              <div *ngIf="!avatarValid || !currentUser?.avatar" class="dropdown-avatar avatar-placeholder">{{ getUserInitial() }}</div>
+              <img *ngIf="avatarValid && currentUser?.avatar" (error)="onAvatarError()" [src]="currentUser.avatar"
+                [alt]="currentUser.nombre" class="dropdown-avatar">
+              <div *ngIf="!avatarValid || !currentUser?.avatar" class="dropdown-avatar avatar-placeholder">{{
+                getUserInitial() }}</div>
               <div>
                 <div class="dropdown-name">{{ currentUser.nombre }}</div>
                 <div class="dropdown-role">{{ getRoleDisplayName() }}</div>
               </div>
             </div>
           </div>
-          
+
           <div class="dropdown-divider"></div>
-          
+
           <div class="dropdown-menu">
-            <a 
-              *ngFor="let item of visibleMenuItems" 
-              (click)="navigate(item.route)"
-              [class.active]="isActiveRoute(item.route)"
-              class="dropdown-item">
+            <a *ngFor="let item of visibleMenuItems" (click)="navigate(item.route)"
+              [class.active]="isActiveRoute(item.route)" class="dropdown-item">
               {{ item.label }}
             </a>
           </div>
-          
+
           <div class="dropdown-divider"></div>
-          
+
           <div class="dropdown-actions">
             <button class="dropdown-item logout-btn" (click)="logout()">
               Cerrar Sesión
@@ -92,28 +89,27 @@
   <div class="mobile-menu" [class.open]="isMenuOpen">
     <div class="mobile-menu-content">
       <div class="mobile-user-info">
-        <img *ngIf="avatarValid && currentUser?.avatar" (error)="onAvatarError()" [src]="currentUser.avatar" [alt]="currentUser.nombre" class="mobile-avatar">
-        <div *ngIf="!avatarValid || !currentUser?.avatar" class="mobile-avatar avatar-placeholder">{{ getUserInitial() }}</div>
+        <img *ngIf="avatarValid && currentUser?.avatar" (error)="onAvatarError()" [src]="currentUser.avatar"
+          [alt]="currentUser.nombre" class="mobile-avatar">
+        <div *ngIf="!avatarValid || !currentUser?.avatar" class="mobile-avatar avatar-placeholder">{{ getUserInitial()
+          }}</div>
         <div class="mobile-user-details">
           <div class="mobile-user-name">{{ currentUser.nombre }}</div>
           <div class="mobile-user-role">{{ getRoleDisplayName() }}</div>
         </div>
       </div>
-      
+
       <div class="mobile-menu-divider"></div>
-      
+
       <div class="mobile-menu-items">
-        <a 
-          *ngFor="let item of visibleMenuItems" 
-          (click)="navigate(item.route)"
-          [class.active]="isActiveRoute(item.route)"
-          class="mobile-menu-item">
+        <a *ngFor="let item of visibleMenuItems" (click)="navigate(item.route)"
+          [class.active]="isActiveRoute(item.route)" class="mobile-menu-item">
           <span class="mobile-item-text">{{ item.label }}</span>
         </a>
       </div>
-      
+
       <div class="mobile-menu-divider"></div>
-      
+
       <button class="mobile-logout-btn" (click)="logout()">
         <span class="mobile-item-text">Cerrar Sesión</span>
       </button>
@@ -122,8 +118,5 @@
 </nav>
 
 <!-- Overlay para cerrar menus -->
-<div 
-  *ngIf="isMenuOpen" 
-  class="menu-overlay" 
-  (click)="closeMenu()">
+<div *ngIf="isMenuOpen" class="menu-overlay" (click)="closeMenu()">
 </div>

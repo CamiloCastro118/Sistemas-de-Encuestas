@@ -36,7 +36,7 @@ interface Encuesta {
 export class AdministradorComponent implements OnInit {
   // Controla que seccion se muestra en pantalla
   vistaActual: 'dashboard' | 'usuarios' | 'encuestas' | 'reportes' = 'dashboard';
-  
+
   // Numeros importantes para mostrar en el panel principal
   estadisticas = {
     totalUsuarios: 0,        // Cuantos usuarios hay registrados
@@ -51,7 +51,7 @@ export class AdministradorComponent implements OnInit {
   usuarios: Usuario[] = [];                // Lista completa de usuarios
   usuarioSeleccionado: Usuario | null = null;  // Usuario que estamos editando
   filtroUsuarios = '';                     // Texto para buscar usuarios
-  
+
   // Variables para manejar la lista de encuestas
   encuestas: Encuesta[] = [];              // Lista completa de encuestas (sin preguntas)
   encuestaSeleccionada: Encuesta | null = null;  // Encuesta que estamos editando
@@ -62,7 +62,7 @@ export class AdministradorComponent implements OnInit {
   mostrarFormUsuario = false;              // Si se muestra o no el formulario
 
   // Inyectar el servicio de encuestas para sincronizar datos
-  constructor(private encuestasService: EncuestasService) {}
+  constructor(private encuestasService: EncuestasService) { }
 
   ngOnInit(): void {
     // Cuando se abre la pagina, cargar todos los datos
@@ -137,7 +137,7 @@ export class AdministradorComponent implements OnInit {
   // Gestion de usuarios
   get usuariosFiltrados(): Usuario[] {
     if (!this.filtroUsuarios) return this.usuarios;
-    return this.usuarios.filter(u => 
+    return this.usuarios.filter(u =>
       u.nombre.toLowerCase().includes(this.filtroUsuarios.toLowerCase()) ||
       u.email.toLowerCase().includes(this.filtroUsuarios.toLowerCase()) ||
       u.rol.toLowerCase().includes(this.filtroUsuarios.toLowerCase())
@@ -189,7 +189,7 @@ export class AdministradorComponent implements OnInit {
   // Gestion de encuestas
   get encuestasFiltradas(): Encuesta[] {
     if (!this.filtroEncuestas) return this.encuestas;
-    return this.encuestas.filter(e => 
+    return this.encuestas.filter(e =>
       e.titulo.toLowerCase().includes(this.filtroEncuestas.toLowerCase()) ||
       e.descripcion.toLowerCase().includes(this.filtroEncuestas.toLowerCase())
     );
@@ -244,7 +244,7 @@ export class AdministradorComponent implements OnInit {
       else if (tipo === 'actividad') payload = this.estadisticas;
       else payload = { usuarios: this.usuarios, encuestas: this.encuestas, estadisticas: this.estadisticas };
 
-      descarga(JSON.stringify(payload, null, 2), `datos-${tipo}-${fecha.toISOString().slice(0,10)}.json`, 'application/json');
+      descarga(JSON.stringify(payload, null, 2), `datos-${tipo}-${fecha.toISOString().slice(0, 10)}.json`, 'application/json');
       return;
     }
 
@@ -253,7 +253,7 @@ export class AdministradorComponent implements OnInit {
         const headers = ['id', 'nombre', 'email', 'rol', 'fechaRegistro', 'activo'];
         const rows = this.usuarios.map(u => [u.id, u.nombre, u.email, u.rol, u.fechaRegistro instanceof Date ? u.fechaRegistro.toISOString() : String(u.fechaRegistro), u.activo ? 'Activo' : 'Inactivo']);
         const csv = toCSV(rows, headers);
-        descarga(csv, `usuarios-${fecha.toISOString().slice(0,10)}.csv`);
+        descarga(csv, `usuarios-${fecha.toISOString().slice(0, 10)}.csv`);
         return;
       }
 
@@ -261,7 +261,7 @@ export class AdministradorComponent implements OnInit {
         const headers = ['id', 'titulo', 'descripcion', 'fechaCreacion', 'fechaLimite', 'estado', 'respuestas'];
         const rows = this.encuestas.map(e => [e.id, e.titulo, e.descripcion, e.fechaCreacion instanceof Date ? e.fechaCreacion.toISOString() : String(e.fechaCreacion), e.fechaLimite instanceof Date ? e.fechaLimite.toISOString() : String(e.fechaLimite), e.estado, e.respuestas]);
         const csv = toCSV(rows, headers);
-        descarga(csv, `encuestas-${fecha.toISOString().slice(0,10)}.csv`);
+        descarga(csv, `encuestas-${fecha.toISOString().slice(0, 10)}.csv`);
         return;
       }
 
@@ -269,7 +269,7 @@ export class AdministradorComponent implements OnInit {
         const headers = ['clave', 'valor'];
         const rows = Object.entries(this.estadisticas).map(([k, v]) => [k, String(v)]);
         const csv = toCSV(rows, headers);
-        descarga(csv, `estadisticas-${fecha.toISOString().slice(0,10)}.csv`);
+        descarga(csv, `estadisticas-${fecha.toISOString().slice(0, 10)}.csv`);
         return;
       }
 
@@ -287,7 +287,7 @@ export class AdministradorComponent implements OnInit {
       Object.entries(this.estadisticas).forEach(([k, v]) => allRows.push([k, String(v)]));
 
       const csv = toCSV(allRows as any[]);
-      descarga(csv, `datos-todos-${fecha.toISOString().slice(0,10)}.csv`);
+      descarga(csv, `datos-todos-${fecha.toISOString().slice(0, 10)}.csv`);
       return;
     }
 
@@ -344,7 +344,7 @@ export class AdministradorComponent implements OnInit {
         }
       }
 
-      const filename = `reporte-encuestas-${fecha.toISOString().slice(0,10)}.pdf`;
+      const filename = `reporte-encuestas-${fecha.toISOString().slice(0, 10)}.pdf`;
       doc.save(filename);
       return;
     }

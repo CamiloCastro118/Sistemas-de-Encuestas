@@ -13,7 +13,7 @@ import { SecurityService } from './services/security.service';
   selector: 'app-root',
   imports: [RouterOutlet, CommonModule, NavbarComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
   // Nombre de la aplicacion
@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
   constructor(
     private router: Router,
     private securityService: SecurityService
-  ) {}
+  ) { }
 
   ngOnInit() {
     // Escuchar cambios de ruta para mostrar/ocultar navbar
@@ -60,15 +60,15 @@ export class AppComponent implements OnInit {
     if (url.includes('/login')) {
       return false;
     }
-    
+
     // En home, mostrar navbar solo si esta autenticado
     if (url === '/home' || url === '/' || url === '') {
       return this.securityService.isAuthenticated();
     }
-    
+
     // En otras paginas protegidas, mostrar si esta autenticado
-    return this.securityService.isAuthenticated() && 
-           (url.includes('/encuestas') || url.includes('/administrador') || url.includes('/directivo'));
+    return this.securityService.isAuthenticated() &&
+      (url.includes('/encuestas') || url.includes('/administrador') || url.includes('/directivo'));
   }
 }
 
