@@ -3,7 +3,6 @@
     
     <!-- Logo y titulo -->
     <div class="navbar-brand" (click)="navigate('/home')">
-      <div class="brand-icon">📊</div>
       <span class="brand-text">Sistema de Encuestas</span>
     </div>
 
@@ -14,7 +13,6 @@
         (click)="navigate(item.route)"
         [class.active]="isActiveRoute(item.route)"
         class="menu-item">
-        <span class="item-icon">{{ item.icon }}</span>
         <span class="item-text">{{ item.label }}</span>
       </a>
     </div>
@@ -24,21 +22,18 @@
       
       <!-- Boton de cerrar sesion prominente -->
       <button class="logout-main-btn" (click)="logout()" title="Cerrar Sesión">
-        <span class="logout-icon">🚪</span>
         <span class="logout-text">Salir</span>
       </button>
       
       <!-- Informacion del usuario -->
       <div class="user-info">
         <div class="user-avatar">
-          <img [src]="currentUser.avatar" [alt]="currentUser.nombre">
+          <img *ngIf="avatarValid && currentUser?.avatar" (error)="onAvatarError()" [src]="currentUser.avatar" [alt]="currentUser.nombre">
+          <div *ngIf="!avatarValid || !currentUser?.avatar" class="avatar-placeholder">{{ getUserInitial() }}</div>
         </div>
         <div class="user-details">
           <div class="user-name">{{ getUserName() }}</div>
-          <div class="user-role">
-            <span class="role-icon">{{ getRoleIcon() }}</span>
-            {{ getRoleDisplayName() }}
-          </div>
+          <div class="user-role">{{ getRoleDisplayName() }}</div>
         </div>
       </div>
 
@@ -51,7 +46,8 @@
         <div class="user-dropdown" [class.open]="isMenuOpen">
           <div class="dropdown-header">
             <div class="dropdown-user">
-              <img [src]="currentUser.avatar" [alt]="currentUser.nombre" class="dropdown-avatar">
+              <img *ngIf="avatarValid && currentUser?.avatar" (error)="onAvatarError()" [src]="currentUser.avatar" [alt]="currentUser.nombre" class="dropdown-avatar">
+              <div *ngIf="!avatarValid || !currentUser?.avatar" class="dropdown-avatar avatar-placeholder">{{ getUserInitial() }}</div>
               <div>
                 <div class="dropdown-name">{{ currentUser.nombre }}</div>
                 <div class="dropdown-role">{{ getRoleDisplayName() }}</div>
@@ -67,7 +63,6 @@
               (click)="navigate(item.route)"
               [class.active]="isActiveRoute(item.route)"
               class="dropdown-item">
-              <span class="item-icon">{{ item.icon }}</span>
               {{ item.label }}
             </a>
           </div>
@@ -76,7 +71,6 @@
           
           <div class="dropdown-actions">
             <button class="dropdown-item logout-btn" (click)="logout()">
-              <span class="item-icon">🚪</span>
               Cerrar Sesión
             </button>
           </div>
@@ -98,7 +92,8 @@
   <div class="mobile-menu" [class.open]="isMenuOpen">
     <div class="mobile-menu-content">
       <div class="mobile-user-info">
-        <img [src]="currentUser.avatar" [alt]="currentUser.nombre" class="mobile-avatar">
+        <img *ngIf="avatarValid && currentUser?.avatar" (error)="onAvatarError()" [src]="currentUser.avatar" [alt]="currentUser.nombre" class="mobile-avatar">
+        <div *ngIf="!avatarValid || !currentUser?.avatar" class="mobile-avatar avatar-placeholder">{{ getUserInitial() }}</div>
         <div class="mobile-user-details">
           <div class="mobile-user-name">{{ currentUser.nombre }}</div>
           <div class="mobile-user-role">{{ getRoleDisplayName() }}</div>
@@ -113,7 +108,6 @@
           (click)="navigate(item.route)"
           [class.active]="isActiveRoute(item.route)"
           class="mobile-menu-item">
-          <span class="mobile-item-icon">{{ item.icon }}</span>
           <span class="mobile-item-text">{{ item.label }}</span>
         </a>
       </div>
@@ -121,7 +115,6 @@
       <div class="mobile-menu-divider"></div>
       
       <button class="mobile-logout-btn" (click)="logout()">
-        <span class="mobile-item-icon">🚪</span>
         <span class="mobile-item-text">Cerrar Sesión</span>
       </button>
     </div>

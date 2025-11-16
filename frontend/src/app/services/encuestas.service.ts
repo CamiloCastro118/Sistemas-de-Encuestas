@@ -107,13 +107,14 @@ export class EncuestasService {
     ];
 
     // Datos iniciales de encuestas
+    const fechaComun = new Date('2025-12-31');
     const encuestasIniciales: Encuesta[] = [
       {
         id: 1,
         titulo: 'Satisfacción del Servicio',
         descripcion: 'Encuesta para evaluar la calidad del servicio prestado',
         fechaCreacion: new Date('2025-10-01'),
-        fechaLimite: new Date('2025-12-31'),
+        fechaLimite: fechaComun,
         estado: 'activa',
         creadorId: 4,
         preguntas: [
@@ -143,7 +144,7 @@ export class EncuestasService {
         titulo: 'Evaluación de Capacitación',
         descripcion: 'Encuesta post-capacitación para evaluar efectividad',
         fechaCreacion: new Date('2025-09-15'),
-        fechaLimite: new Date('2025-11-15'),
+        fechaLimite: fechaComun,
         estado: 'activa',
         creadorId: 2,
         preguntas: [
@@ -160,6 +161,57 @@ export class EncuestasService {
             tipo: 'escala',
             requerida: true
           }
+        ]
+      },
+      {
+        id: 3,
+        titulo: 'Encuesta de Clima Laboral',
+        descripcion: 'Medir la percepción del ambiente de trabajo',
+        fechaCreacion: new Date('2025-10-10'),
+        fechaLimite: fechaComun,
+        estado: 'activa',
+        creadorId: 4,
+        preguntas: [
+          { id: 6, texto: '¿Se siente valorado en su trabajo?', tipo: 'multiple', opciones: ['Sí','A veces','No'], requerida: true },
+          { id: 7, texto: '¿Qué mejorarías del ambiente laboral?', tipo: 'abierta', requerida: false }
+        ]
+      },
+      {
+        id: 4,
+        titulo: 'Uso de Herramientas Digitales',
+        descripcion: 'Analizar la adopción de herramientas tecnológicas',
+        fechaCreacion: new Date('2025-10-12'),
+        fechaLimite: fechaComun,
+        estado: 'activa',
+        creadorId: 3,
+        preguntas: [
+          { id: 8, texto: '¿Usa las herramientas proporcionadas regularmente?', tipo: 'multiple', opciones: ['Sí','No'], requerida: true },
+          { id: 9, texto: '¿Qué herramienta considera más útil?', tipo: 'abierta', requerida: false }
+        ]
+      },
+      {
+        id: 5,
+        titulo: 'Satisfacción con Atención al Cliente',
+        descripcion: 'Opiniones sobre el soporte y atención al cliente',
+        fechaCreacion: new Date('2025-10-20'),
+        fechaLimite: fechaComun,
+        estado: 'activa',
+        creadorId: 4,
+        preguntas: [
+          { id: 10, texto: '¿La atención fue oportuna?', tipo: 'multiple', opciones: ['Sí','No'], requerida: true },
+          { id: 11, texto: 'Comentarios adicionales', tipo: 'abierta', requerida: false }
+        ]
+      },
+      {
+        id: 6,
+        titulo: 'Preferencias de Comunicación',
+        descripcion: 'Conocer canales preferidos para comunicaciones internas',
+        fechaCreacion: new Date('2025-10-25'),
+        fechaLimite: fechaComun,
+        estado: 'activa',
+        creadorId: 2,
+        preguntas: [
+          { id: 12, texto: '¿Qué canal prefiere para noticias internas?', tipo: 'multiple', opciones: ['Email','Intranet','WhatsApp','Otro'], requerida: true }
         ]
       }
     ];

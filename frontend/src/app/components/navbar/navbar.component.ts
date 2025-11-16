@@ -27,31 +27,32 @@ export class NavbarComponent implements OnInit {
   
   // Informacion del usuario que esta usando el sistema
   currentUser: any = null;
+  avatarValid = true;
 
   // Lista de todas las opciones del menu
   menuItems: MenuItem[] = [
     {
       label: 'Inicio',
       route: '/home',
-      icon: '🏠',
+      icon: '',
       roles: ['encuestado', 'directivo', 'administrador']  // Todos pueden ver inicio
     },
     {
       label: 'Encuestas',
       route: '/encuestas',
-      icon: '📋',
+      icon: '',
       roles: ['encuestado', 'directivo', 'administrador']  // Todos pueden ver encuestas
     },
     {
       label: 'Panel Directivo',
       route: '/directivo',
-      icon: '📊',
+      icon: '',
       roles: ['directivo', 'administrador']  // Solo directivos y administradores
     },
     {
       label: 'Administración',
       route: '/administrador',
-      icon: '⚙️',
+      icon: '',
       roles: ['administrador']  // Solo administradores
     }
   ];
@@ -90,18 +91,42 @@ export class NavbarComponent implements OnInit {
         this.currentUser = {
           id: Date.now(),
           usuario: localStorage.getItem('userName') || 'Usuario',
+          nombre: localStorage.getItem('userName') || 'Usuario',
           role: this.securityService.getUserRole(),
-          avatar: 'https://via.placeholder.com/40x40/007bff/white?text=' + 
+          avatar: 'https://via.placeholder.com/40x40/007bff/white?text=' +
                   (localStorage.getItem('userName')?.charAt(0).toUpperCase() || 'U')
         };
-      } else if (!this.currentUser.avatar) {
-        // Agregar avatar si no existe
-        this.currentUser.avatar = 'https://via.placeholder.com/40x40/007bff/white?text=' + 
-                                  (this.currentUser.usuario?.charAt(0).toUpperCase() || 'U');
+      } else {
+        // Si existe el usuario pero falta avatar, creamos un placeholder
+        if (!this.currentUser.avatar) {
+          // Asegurar que existan las propiedades `usuario` y `nombre`
+          if (!this.currentUser.usuario && this.currentUser.nombre) {
+            this.currentUser.usuario = this.currentUser.nombre;
+          }
+          if (!this.currentUser.nombre && this.currentUser.usuario) {
+            this.currentUser.nombre = this.currentUser.usuario;
+          }
+
+          this.currentUser.avatar = 'https://via.placeholder.com/40x40/007bff/white?text=' +
+                                    ((this.currentUser.nombre || this.currentUser.usuario)?.charAt(0).toUpperCase() || 'U');
+        }
       }
+
+      // Determinar si el avatar es válido
+      this.avatarValid = this.isAvatarValid(this.currentUser?.avatar);
     } else {
       this.currentUser = null;
+      this.avatarValid = false;
     }
+  }
+
+  // Validar URL de avatar (filtrar 'undefined', 'null' y cadenas vacías)
+  private isAvatarValid(url?: string): boolean {
+    if (!url || typeof url !== 'string') return false;
+    const trimmed = url.trim();
+    if (trimmed === '') return false;
+    if (/undefined|null/i.test(trimmed)) return false;
+    return true;
   }
 
   get visibleMenuItems(): MenuItem[] {
@@ -158,18 +183,23 @@ export class NavbarComponent implements OnInit {
   }
 
   getRoleIcon(): string {
-    const role = this.securityService.getUserRole();
-    const roleIcons: { [key: string]: string } = {
-      'user': '👤',
-      'directivo': '👔',
-      'admin': '👨‍💻',
-      'administrador': '👨‍💻'
-    };
-    return roleIcons[role] || '👤';
+    // No mostrar icono de rol — devolver cadena vacía para mantener compatibilidad
+    return '';
   }
 
   getUserName(): string {
-    return this.currentUser?.usuario || 'Usuario';
+    // Preferir la propiedad `nombre`, si no existe caer a `usuario`.
+    return this.currentUser?.nombre || this.currentUser?.usuario || 'Usuario';
+  }
+
+  // Inicial del nombre de usuario para usar en placeholders
+  getUserInitial(): string {
+    const name = this.getUserName();
+    return (name && name.length > 0) ? name.charAt(0).toUpperCase() : 'U';
+  }
+
+  onAvatarError(): void {
+    this.avatarValid = false;
   }
 
   // Verificar si el usuario esta autenticado

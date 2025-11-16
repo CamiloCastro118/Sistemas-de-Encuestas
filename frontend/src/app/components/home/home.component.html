@@ -2,7 +2,7 @@
   <!-- Seccion principal para usuarios no autenticados -->
   <div class="hero-section" *ngIf="!isAuthenticated()">
     <div class="hero-content">
-      <h1 class="hero-title">📊 Sistema de Encuestas</h1>
+      <h1 class="hero-title">Sistema de Encuestas</h1>
       <p class="hero-subtitle">Plataforma integral para la gestión y análisis de encuestas institucionales</p>
       <p class="hero-description">
         Bienvenido al sistema de encuestas. Para acceder a las funcionalidades completas y responder encuestas, 
@@ -11,10 +11,10 @@
       
       <div class="hero-actions">
         <button class="btn-primary large" (click)="navegarA('/login')">
-          🔐 Iniciar Sesión
+          Iniciar Sesión
         </button>
         <button class="btn-secondary large" onclick="alert('Funcionalidad de información pública')">
-          📋 Información Pública
+          Información Pública
         </button>
       </div>
     </div>
@@ -40,7 +40,7 @@
   <!-- Seccion principal para usuarios autenticados -->
   <div class="hero-section" *ngIf="isAuthenticated()">
     <div class="hero-content">
-      <h1 class="hero-title">¡Bienvenido, {{ getUserName() }}! �</h1>
+      <h1 class="hero-title">¡Bienvenido, {{ getUserName() }}!</h1>
       <p class="hero-subtitle">Panel principal del Sistema de Encuestas</p>
       <p class="hero-description">
         Tienes acceso como <strong>{{ getUserRole() }}</strong>. 
@@ -49,13 +49,13 @@
       
       <div class="hero-actions">
         <button class="btn-primary large" (click)="navegarA('/encuestas')">
-          📋 Ver Encuestas
+          Ver Encuestas
         </button>
         <button class="btn-secondary large" (click)="navegarA('/administrador')" *ngIf="getUserRole() === 'admin' || getUserRole() === 'administrador'">
-          ⚙️ Administración
+          Administración
         </button>
         <button class="btn-secondary large" (click)="navegarA('/directivo')" *ngIf="getUserRole() === 'directivo'">
-          📊 Panel Directivo
+          Panel Directivo
         </button>
       </div>
     </div>
@@ -63,7 +63,7 @@
     <div class="hero-visual">
       <div class="stats-preview">
         <div class="stat-item">
-          <div class="stat-number">✅</div>
+          <div class="stat-number">●</div>
           <div class="stat-label">Autenticado</div>
         </div>
         <div class="stat-item">
@@ -71,7 +71,7 @@
           <div class="stat-label">Rol Actual</div>
         </div>
         <div class="stat-item">
-          <div class="stat-number">🎯</div>
+          <div class="stat-number">●</div>
           <div class="stat-label">Activo</div>
         </div>
       </div>
@@ -84,37 +84,31 @@
       
       <div class="features-grid">
         <div class="feature-card">
-          <div class="feature-icon">📊</div>
           <h3>Dashboard Interactivo</h3>
           <p>Visualiza métricas y estadísticas en tiempo real con gráficos intuitivos y fáciles de interpretar.</p>
         </div>
         
         <div class="feature-card">
-          <div class="feature-icon">📋</div>
           <h3>Gestión de Encuestas</h3>
           <p>Crea, administra y despliega encuestas personalizadas con múltiples tipos de preguntas.</p>
         </div>
         
         <div class="feature-card">
-          <div class="feature-icon">👥</div>
           <h3>Gestión de Usuarios</h3>
           <p>Sistema de roles completo para encuestados, directivos y administradores.</p>
         </div>
         
         <div class="feature-card">
-          <div class="feature-icon">📈</div>
           <h3>Análisis Avanzado</h3>
           <p>Reportes detallados y análisis de tendencias para la toma de decisiones informadas.</p>
         </div>
         
         <div class="feature-card">
-          <div class="feature-icon">🔒</div>
           <h3>Seguridad</h3>
           <p>Protección de datos y autenticación segura para garantizar la confidencialidad.</p>
         </div>
         
         <div class="feature-card">
-          <div class="feature-icon">📱</div>
           <h3>Responsive</h3>
           <p>Acceso desde cualquier dispositivo con interfaz optimizada para móviles y tablets.</p>
         </div>

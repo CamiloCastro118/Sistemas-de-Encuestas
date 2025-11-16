@@ -10,25 +10,25 @@
         (click)="cambiarVista('dashboard')" 
         [class.active]="vistaActual === 'dashboard'"
         class="nav-item">
-        📊 Dashboard Ejecutivo
+        Dashboard Ejecutivo
       </a>
       <a 
         (click)="cambiarVista('reportes')" 
         [class.active]="vistaActual === 'reportes'"
         class="nav-item">
-        📋 Reportes
+        Reportes
       </a>
       <a 
         (click)="cambiarVista('metricas')" 
         [class.active]="vistaActual === 'metricas'"
         class="nav-item">
-        📈 Métricas por Área
+        Métricas por Área
       </a>
       <a 
         (click)="cambiarVista('configuracion')" 
         [class.active]="vistaActual === 'configuracion'"
         class="nav-item">
-        ⚙️ Configuración
+        Configuración
       </a>
     </nav>
     
@@ -78,10 +78,9 @@
             *ngFor="let area of metricasPorArea" 
             class="area-card"
             [class]="obtenerColorSatisfaccion(area.satisfaccion)">
-            <div class="area-header">
-              <h4>{{ area.area }}</h4>
-              <span class="tendencia-icon">{{ obtenerIconoTendencia(area.tendencia) }}</span>
-            </div>
+              <div class="area-header">
+                <h4>{{ area.area }}</h4>
+              </div>
             <div class="area-satisfaccion">{{ area.satisfaccion }}%</div>
             <div class="area-respuestas">{{ area.respuestas }} respuestas</div>
           </div>
@@ -93,16 +92,16 @@
         <h3>Acciones Rápidas</h3>
         <div class="acciones-grid">
           <button class="accion-btn" (click)="generarReportePersonalizado()">
-            📊 Generar Reporte Personalizado
+            Generar Reporte Personalizado
           </button>
           <button class="accion-btn" (click)="cambiarVista('reportes')">
-            📋 Ver Todos los Reportes
+            Ver Todos los Reportes
           </button>
           <button class="accion-btn" (click)="cambiarVista('metricas')">
-            📈 Análisis Detallado
+            Análisis Detallado
           </button>
           <button class="accion-btn" (click)="navegarAAdmin()">
-            ⚙️ Panel de Administración
+            Panel de Administración
           </button>
         </div>
       </div>
@@ -132,7 +131,10 @@
             
             <div class="reporte-actions">
               <button class="btn-outline" (click)="verReporte(reporte)">Ver Detalles</button>
-              <button class="btn-secondary" (click)="exportarReporte(reporte)">Exportar</button>
+              <div class="btn-group">
+                <button class="btn-secondary" (click)="$any(exportarReporte)(reporte,'csv')">Exportar CSV</button>
+                <button class="btn-secondary" (click)="$any(exportarReporte)(reporte,'pdf')">Exportar PDF</button>
+              </div>
             </div>
           </div>
         </div>
@@ -143,9 +145,10 @@
         <div class="detalle-header">
           <button class="btn-volver" (click)="cerrarReporte()">← Volver</button>
           <h3>{{ reporteSeleccionado.titulo }}</h3>
-          <button class="btn-primary" (click)="exportarReporte(reporteSeleccionado)">
-            📥 Exportar
-          </button>
+          <div class="btn-group">
+            <button class="btn-primary" (click)="$any(exportarReporte)(reporteSeleccionado,'csv')">📥 Exportar CSV</button>
+            <button class="btn-primary" (click)="$any(exportarReporte)(reporteSeleccionado,'pdf')">📥 Exportar PDF</button>
+          </div>
         </div>
         
         <div class="detalle-meta">

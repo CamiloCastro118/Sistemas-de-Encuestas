@@ -10,25 +10,25 @@
         (click)="cambiarVista('dashboard')" 
         [class.active]="vistaActual === 'dashboard'"
         class="nav-item">
-        📊 Dashboard
+        Dashboard
       </a>
       <a 
         (click)="cambiarVista('usuarios')" 
         [class.active]="vistaActual === 'usuarios'"
         class="nav-item">
-        👥 Usuarios
+        Usuarios
       </a>
       <a 
         (click)="cambiarVista('encuestas')" 
         [class.active]="vistaActual === 'encuestas'"
         class="nav-item">
-        📋 Encuestas
+        Encuestas
       </a>
       <a 
         (click)="cambiarVista('reportes')" 
         [class.active]="vistaActual === 'reportes'"
         class="nav-item">
-        📈 Reportes
+        Reportes
       </a>
     </nav>
   </div>
@@ -182,19 +182,28 @@
         <div class="reporte-card">
           <h4>Reporte de Usuarios</h4>
           <p>Estadísticas detalladas de usuarios registrados y su actividad</p>
-          <button class="btn-primary" (click)="exportarReportes()">Generar Reporte</button>
+          <div class="btn-group">
+            <button class="btn-primary" (click)="$any(exportarReportes)('usuarios','csv')">Generar Reporte</button>
+            <button class="btn-secondary" (click)="$any(exportarReportes)('usuarios','pdf')">Exportar PDF</button>
+          </div>
         </div>
         
         <div class="reporte-card">
           <h4>Reporte de Encuestas</h4>
           <p>Análisis de encuestas creadas, respuestas y tendencias</p>
-          <button class="btn-primary" (click)="exportarReportes()">Generar Reporte</button>
+          <div class="btn-group">
+            <button class="btn-primary" (click)="$any(exportarReportes)('encuestas','csv')">Generar Reporte</button>
+            <button class="btn-secondary" (click)="$any(exportarReportes)('encuestas','pdf')">Exportar PDF</button>
+          </div>
         </div>
         
         <div class="reporte-card">
           <h4>Reporte de Actividad</h4>
           <p>Seguimiento de la actividad del sistema en tiempo real</p>
-          <button class="btn-primary" (click)="exportarReportes()">Generar Reporte</button>
+          <div class="btn-group">
+            <button class="btn-primary" (click)="$any(exportarReportes)('actividad','csv')">Generar Reporte</button>
+            <button class="btn-secondary" (click)="$any(exportarReportes)('actividad','pdf')">Exportar PDF</button>
+          </div>
         </div>
       </div>
     </div>

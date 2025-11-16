@@ -2,6 +2,8 @@
 import { CommonModule } from '@angular/common';  // Funciones basicas que se usan siempre
 import { FormsModule } from '@angular/forms';  // Para poder usar formularios con inputs
 import { Router } from '@angular/router';  // Para cambiar de pagina
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 // Estructura de datos para un reporte generado
 interface Reporte {
@@ -124,9 +126,67 @@ export class DirectivoComponent implements OnInit {
     this.reporteSeleccionado = null;
   }
 
-  exportarReporte(reporte: Reporte): void {
-    console.log('Exportando reporte:', reporte.titulo);
-    alert(`Exportando reporte: ${reporte.titulo}\nEsta funcionalidad se implementará próximamente.`);
+  exportarReporte(reporte: Reporte | null, formato: 'csv' | 'json' | 'pdf' = 'csv'): void {
+    if (!reporte) return;
+    const fecha = new Date();
+
+    const descarga = (data: BlobPart, filename: string, mime = 'text/csv') => {
+      const blob = data instanceof Blob ? data : new Blob([data], { type: mime });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    };
+
+    if (formato === 'json') {
+      descarga(JSON.stringify(reporte, null, 2), `${reporte.titulo.replace(/\s+/g,'-')}-${fecha.toISOString().slice(0,10)}.json`, 'application/json');
+      return;
+    }
+
+    if (formato === 'csv') {
+      // Convertir objeto reporte.datos a CSV simple
+      const rows: string[] = [];
+      const headers = Object.keys(reporte.datos || {});
+      if (headers.length) {
+        rows.push(headers.join(','));
+        const values = headers.map(h => {
+          const v = reporte.datos[h];
+          if (v === null || v === undefined) return '';
+          return String(v).includes(',') || String(v).includes('\n') ? '"' + String(v).replace(/"/g,'""') + '"' : String(v);
+        });
+        rows.push(values.join(','));
+      } else {
+        rows.push('key,value');
+        for (const k of Object.keys(reporte.datos || {})) rows.push(`${k},${String((reporte.datos as any)[k])}`);
+      }
+      descarga(rows.join('\n'), `${reporte.titulo.replace(/\s+/g,'-')}-${fecha.toISOString().slice(0,10)}.csv`);
+      return;
+    }
+
+    if (formato === 'pdf') {
+      const doc = new jsPDF();
+      doc.setFontSize(16);
+      doc.text(reporte.titulo, 14, 20);
+      doc.setFontSize(10);
+      doc.text(`Generado: ${reporte.fechaGeneracion.toLocaleString()}`, 14, 28);
+
+      const dataEntries = Object.entries(reporte.datos || {});
+      const body = dataEntries.map(([k, v]) => [k, Array.isArray(v) ? JSON.stringify(v) : String(v)]);
+
+      (autoTable as any)(doc, {
+        startY: 36,
+        head: [['Clave', 'Valor']],
+        body,
+        styles: { fontSize: 9 }
+      });
+
+      doc.save(`${reporte.titulo.replace(/\s+/g,'-')}-${fecha.toISOString().slice(0,10)}.pdf`);
+      return;
+    }
   }
 
   generarReportePersonalizado(): void {
@@ -140,12 +200,8 @@ export class DirectivoComponent implements OnInit {
   }
 
   obtenerIconoTendencia(tendencia: string): string {
-    switch(tendencia) {
-      case 'subiendo': return '📈';
-      case 'bajando': return '📉';
-      case 'estable': return '➡️';
-      default: return '📊';
-    }
+    // No mostrar iconos gráficos; devolver cadena vacía para mantener compatibilidad
+    return '';
   }
 
   obtenerColorSatisfaccion(satisfaccion: number): string {
