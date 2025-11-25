@@ -1,0 +1,1448 @@
+From d116c7340c2a2778934e5dfb24bc5c792c6f2087 Mon Sep 17 00:00:00 2001
+From: encuestadost <ac.castro18@ciaf.edu.co>
+Date: Sun, 16 Nov 2025 11:21:11 -0500
+Subject: [PATCH 2/3] chore: remove UI emoji icons and revert admin styles
+
+---
+ frontend/package-lock.json                    | 238 +++++++++++++++++-
+ frontend/package.json                         |   3 +
+ .../administrador/administrador.component.css |  25 +-
+ .../administrador.component.html              |  23 +-
+ .../administrador/administrador.component.ts  | 232 +++++++++++++----
+ .../directivo/directivo.component.html        |  35 +--
+ .../directivo/directivo.component.ts          |  74 +++++-
+ .../app/components/home/home.component.html   |  24 +-
+ .../components/navbar/navbar.component.html   |  21 +-
+ .../app/components/navbar/navbar.component.ts |  66 +++--
+ .../src/app/services/encuestas.service.ts     |  56 ++++-
+ frontend/src/styles.css                       |   1 +
+ 12 files changed, 666 insertions(+), 132 deletions(-)
+
+diff --git a/frontend/package-lock.json b/frontend/package-lock.json
+index 52e42a15..6cfe49e3 100644
+--- a/frontend/package-lock.json
++++ b/frontend/package-lock.json
+@@ -17,7 +17,10 @@
+         "@angular/platform-server": "^19.2.0",
+         "@angular/router": "^19.2.0",
+         "@angular/ssr": "^19.2.17",
++        "encuestas-fullstack": "file:..",
+         "express": "^4.18.2",
++        "jspdf": "^2.5.1",
++        "jspdf-autotable": "^3.5.31",
+         "rxjs": "~7.8.0",
+         "tslib": "^2.3.0",
+         "zone.js": "~0.15.0"
+@@ -39,6 +42,24 @@
+         "typescript": "~5.7.2"
+       }
+     },
++    "..": {
++      "name": "encuestas-fullstack",
++      "version": "1.0.0",
++      "license": "ISC",
++      "workspaces": [
++        "frontend",
++        "backend"
++      ],
++      "devDependencies": {
++        "concurrently": "^8.2.2",
++        "prettier": "^3.0.3",
++        "rimraf": "^5.0.5"
++      },
++      "engines": {
++        "node": ">=18.0.0",
++        "npm": ">=9.0.0"
++      }
++    },
+     "node_modules/@ampproject/remapping": {
+       "version": "2.3.0",
+       "resolved": "https://registry.npmjs.org/@ampproject/remapping/-/remapping-2.3.0.tgz",
+@@ -2287,7 +2308,6 @@
+       "version": "7.26.10",
+       "resolved": "https://registry.npmjs.org/@babel/runtime/-/runtime-7.26.10.tgz",
+       "integrity": "sha512-2WJMeRQPHKSPemqk/awGrAiuFfzBmOIPXKizAsVhWH9YJqLZ0H+HS4c8loHGgW6utJ3E/ejXQUsiGaQy2NZ9Fw==",
+-      "dev": true,
+       "license": "MIT",
+       "dependencies": {
+         "regenerator-runtime": "^0.14.0"
+@@ -5308,6 +5328,13 @@
+       "dev": true,
+       "license": "MIT"
+     },
++    "node_modules/@types/raf": {
++      "version": "3.4.3",
++      "resolved": "https://registry.npmjs.org/@types/raf/-/raf-3.4.3.tgz",
++      "integrity": "sha512-c4YAvMedbPZ5tEyxzQdMoOhhJ4RD3rngZIdwC2/qDN3d7JpEhB6fiBRKVY1lg5B7Wk+uPBjn5f39j1/2MY1oOw==",
++      "license": "MIT",
++      "optional": true
++    },
+     "node_modules/@types/range-parser": {
+       "version": "1.2.7",
+       "resolved": "https://registry.npmjs.org/@types/range-parser/-/range-parser-1.2.7.tgz",
+@@ -6105,6 +6132,18 @@
+         "lodash": "^4.17.14"
+       }
+     },
++    "node_modules/atob": {
++      "version": "2.1.2",
++      "resolved": "https://registry.npmjs.org/atob/-/atob-2.1.2.tgz",
++      "integrity": "sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==",
++      "license": "(MIT OR Apache-2.0)",
++      "bin": {
++        "atob": "bin/atob.js"
++      },
++      "engines": {
++        "node": ">= 4.5.0"
++      }
++    },
+     "node_modules/autoprefixer": {
+       "version": "10.4.20",
+       "resolved": "https://registry.npmjs.org/autoprefixer/-/autoprefixer-10.4.20.tgz",
+@@ -6220,6 +6259,16 @@
+       "dev": true,
+       "license": "MIT"
+     },
++    "node_modules/base64-arraybuffer": {
++      "version": "1.0.2",
++      "resolved": "https://registry.npmjs.org/base64-arraybuffer/-/base64-arraybuffer-1.0.2.tgz",
++      "integrity": "sha512-I3yl4r9QB5ZRY3XuJVEPfc2XhZO6YweFPI+UovAzn+8/hb3oJ6lnysaFcjVpkCPfVWFUDvoZ8kmVDP7WyRtYtQ==",
++      "license": "MIT",
++      "optional": true,
++      "engines": {
++        "node": ">= 0.6.0"
++      }
++    },
+     "node_modules/base64-js": {
+       "version": "1.5.1",
+       "resolved": "https://registry.npmjs.org/base64-js/-/base64-js-1.5.1.tgz",
+@@ -6450,6 +6499,18 @@
+         "node": "^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7"
+       }
+     },
++    "node_modules/btoa": {
++      "version": "1.2.1",
++      "resolved": "https://registry.npmjs.org/btoa/-/btoa-1.2.1.tgz",
++      "integrity": "sha512-SB4/MIGlsiVkMcHmT+pSmIPoNDoHg+7cMzmt3Uxt628MTz2487DKSqK/fuhFBrkuqrYv5UCEnACpF4dTFNKc/g==",
++      "license": "(MIT OR Apache-2.0)",
++      "bin": {
++        "btoa": "bin/btoa.js"
++      },
++      "engines": {
++        "node": ">= 0.4.0"
++      }
++    },
+     "node_modules/buffer": {
+       "version": "5.7.1",
+       "resolved": "https://registry.npmjs.org/buffer/-/buffer-5.7.1.tgz",
+@@ -6682,6 +6743,33 @@
+       ],
+       "license": "CC-BY-4.0"
+     },
++    "node_modules/canvg": {
++      "version": "3.0.11",
++      "resolved": "https://registry.npmjs.org/canvg/-/canvg-3.0.11.tgz",
++      "integrity": "sha512-5ON+q7jCTgMp9cjpu4Jo6XbvfYwSB2Ow3kzHKfIyJfaCAOHLbdKPQqGKgfED/R5B+3TFFfe8pegYA+b423SRyA==",
++      "license": "MIT",
++      "optional": true,
++      "dependencies": {
++        "@babel/runtime": "^7.12.5",
++        "@types/raf": "^3.4.0",
++        "core-js": "^3.8.3",
++        "raf": "^3.4.1",
++        "regenerator-runtime": "^0.13.7",
++        "rgbcolor": "^1.0.1",
++        "stackblur-canvas": "^2.0.0",
++        "svg-pathdata": "^6.0.3"
++      },
++      "engines": {
++        "node": ">=10.0.0"
++      }
++    },
++    "node_modules/canvg/node_modules/regenerator-runtime": {
++      "version": "0.13.11",
++      "resolved": "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.13.11.tgz",
++      "integrity": "sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==",
++      "license": "MIT",
++      "optional": true
++    },
+     "node_modules/chalk": {
+       "version": "4.1.2",
+       "resolved": "https://registry.npmjs.org/chalk/-/chalk-4.1.2.tgz",
+@@ -7214,6 +7302,18 @@
+         "webpack": "^5.1.0"
+       }
+     },
++    "node_modules/core-js": {
++      "version": "3.46.0",
++      "resolved": "https://registry.npmjs.org/core-js/-/core-js-3.46.0.tgz",
++      "integrity": "sha512-vDMm9B0xnqqZ8uSBpZ8sNtRtOdmfShrvT6h2TuQGLs0Is+cR0DYbj/KWP6ALVNbWPpqA/qPLoOuppJN07humpA==",
++      "hasInstallScript": true,
++      "license": "MIT",
++      "optional": true,
++      "funding": {
++        "type": "opencollective",
++        "url": "https://opencollective.com/core-js"
++      }
++    },
+     "node_modules/core-js-compat": {
+       "version": "3.45.1",
+       "resolved": "https://registry.npmjs.org/core-js-compat/-/core-js-compat-3.45.1.tgz",
+@@ -7307,6 +7407,16 @@
+         "node": ">= 8"
+       }
+     },
++    "node_modules/css-line-break": {
++      "version": "2.1.0",
++      "resolved": "https://registry.npmjs.org/css-line-break/-/css-line-break-2.1.0.tgz",
++      "integrity": "sha512-FHcKFCZcAha3LwfVBhCQbW2nCNbkZXn7KVUJcsT5/P8YmfsVja0FMPJr0B903j/E69HUphKiV9iQArX8SDYA4w==",
++      "license": "MIT",
++      "optional": true,
++      "dependencies": {
++        "utrie": "^1.0.2"
++      }
++    },
+     "node_modules/css-loader": {
+       "version": "7.1.2",
+       "resolved": "https://registry.npmjs.org/css-loader/-/css-loader-7.1.2.tgz",
+@@ -7591,6 +7701,13 @@
+         "url": "https://github.com/fb55/domhandler?sponsor=1"
+       }
+     },
++    "node_modules/dompurify": {
++      "version": "2.5.8",
++      "resolved": "https://registry.npmjs.org/dompurify/-/dompurify-2.5.8.tgz",
++      "integrity": "sha512-o1vSNgrmYMQObbSSvF/1brBYEQPHhV1+gsmrusO7/GXtp1T9rCS8cXFqVxK/9crT1jA6Ccv+5MTSjBNqr7Sovw==",
++      "license": "(MPL-2.0 OR Apache-2.0)",
++      "optional": true
++    },
+     "node_modules/domutils": {
+       "version": "3.2.2",
+       "resolved": "https://registry.npmjs.org/domutils/-/domutils-3.2.2.tgz",
+@@ -7698,6 +7815,10 @@
+         "node": ">=0.10.0"
+       }
+     },
++    "node_modules/encuestas-fullstack": {
++      "resolved": "..",
++      "link": true
++    },
+     "node_modules/engine.io": {
+       "version": "6.6.4",
+       "resolved": "https://registry.npmjs.org/engine.io/-/engine.io-6.6.4.tgz",
+@@ -8224,6 +8345,12 @@
+         }
+       }
+     },
++    "node_modules/fflate": {
++      "version": "0.8.2",
++      "resolved": "https://registry.npmjs.org/fflate/-/fflate-0.8.2.tgz",
++      "integrity": "sha512-cPJU47OaAoCbg0pBvzsgpTPhmhqI5eJjh/JIu8tPj5q+T7iLvW/JAYUqmE7KOB4R1ZyEhzBaIQpQpardBF5z8A==",
++      "license": "MIT"
++    },
+     "node_modules/filename-reserved-regex": {
+       "version": "2.0.0",
+       "resolved": "https://registry.npmjs.org/filename-reserved-regex/-/filename-reserved-regex-2.0.0.tgz",
+@@ -8950,6 +9077,20 @@
+       "dev": true,
+       "license": "MIT"
+     },
++    "node_modules/html2canvas": {
++      "version": "1.4.1",
++      "resolved": "https://registry.npmjs.org/html2canvas/-/html2canvas-1.4.1.tgz",
++      "integrity": "sha512-fPU6BHNpsyIhr8yyMpTLLxAbkaK8ArIBcmZIRiBLiDhjeqvXolaEmDGmELFuX9I4xDcaKKcJl+TKZLqruBbmWA==",
++      "license": "MIT",
++      "optional": true,
++      "dependencies": {
++        "css-line-break": "^2.1.0",
++        "text-segmentation": "^1.0.3"
++      },
++      "engines": {
++        "node": ">=8.0.0"
++      }
++    },
+     "node_modules/htmlparser2": {
+       "version": "10.0.0",
+       "resolved": "https://registry.npmjs.org/htmlparser2/-/htmlparser2-10.0.0.tgz",
+@@ -9776,6 +9917,33 @@
+       ],
+       "license": "MIT"
+     },
++    "node_modules/jspdf": {
++      "version": "2.5.2",
++      "resolved": "https://registry.npmjs.org/jspdf/-/jspdf-2.5.2.tgz",
++      "integrity": "sha512-myeX9c+p7znDWPk0eTrujCzNjT+CXdXyk7YmJq5nD5V7uLLKmSXnlQ/Jn/kuo3X09Op70Apm0rQSnFWyGK8uEQ==",
++      "license": "MIT",
++      "dependencies": {
++        "@babel/runtime": "^7.23.2",
++        "atob": "^2.1.2",
++        "btoa": "^1.2.1",
++        "fflate": "^0.8.1"
++      },
++      "optionalDependencies": {
++        "canvg": "^3.0.6",
++        "core-js": "^3.6.0",
++        "dompurify": "^2.5.4",
++        "html2canvas": "^1.0.0-rc.5"
++      }
++    },
++    "node_modules/jspdf-autotable": {
++      "version": "3.8.4",
++      "resolved": "https://registry.npmjs.org/jspdf-autotable/-/jspdf-autotable-3.8.4.tgz",
++      "integrity": "sha512-rSffGoBsJYX83iTRv8Ft7FhqfgEL2nLpGAIiqruEQQ3e4r0qdLFbPUB7N9HAle0I3XgpisvyW751VHCqKUVOgQ==",
++      "license": "MIT",
++      "peerDependencies": {
++        "jspdf": "^2.5.1"
++      }
++    },
+     "node_modules/karma": {
+       "version": "6.4.4",
+       "resolved": "https://registry.npmjs.org/karma/-/karma-6.4.4.tgz",
+@@ -11882,6 +12050,13 @@
+         "url": "https://github.com/sponsors/sindresorhus"
+       }
+     },
++    "node_modules/performance-now": {
++      "version": "2.1.0",
++      "resolved": "https://registry.npmjs.org/performance-now/-/performance-now-2.1.0.tgz",
++      "integrity": "sha512-7EAHlyLHI56VEIdK57uwHdHKIaAGbnXPiw0yWbarQZOKaKpvUIgW0jWRVLiatnM+XXlSwsanIBH/hzGMJulMow==",
++      "license": "MIT",
++      "optional": true
++    },
+     "node_modules/picocolors": {
+       "version": "1.1.1",
+       "resolved": "https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz",
+@@ -12219,6 +12394,16 @@
+       ],
+       "license": "MIT"
+     },
++    "node_modules/raf": {
++      "version": "3.4.1",
++      "resolved": "https://registry.npmjs.org/raf/-/raf-3.4.1.tgz",
++      "integrity": "sha512-Sq4CW4QhwOHE8ucn6J34MqtZCeWFP2aQSmrlroYgqAV1PjStIhJXxYuTgUIfkEk7zTLjmIjLmU5q+fbD1NnOJA==",
++      "license": "MIT",
++      "optional": true,
++      "dependencies": {
++        "performance-now": "^2.1.0"
++      }
++    },
+     "node_modules/randombytes": {
+       "version": "2.1.0",
+       "resolved": "https://registry.npmjs.org/randombytes/-/randombytes-2.1.0.tgz",
+@@ -12325,7 +12510,6 @@
+       "version": "0.14.1",
+       "resolved": "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.14.1.tgz",
+       "integrity": "sha512-dYnhHh0nJoMfnkZs6GmmhFknAGRrLznOu5nc9ML+EJxGvrx6H7teuevqVqCuPcPK//3eDrrjQhehXVx9cnkGdw==",
+-      "dev": true,
+       "license": "MIT"
+     },
+     "node_modules/regex-parser": {
+@@ -12518,6 +12702,16 @@
+       "dev": true,
+       "license": "MIT"
+     },
++    "node_modules/rgbcolor": {
++      "version": "1.0.1",
++      "resolved": "https://registry.npmjs.org/rgbcolor/-/rgbcolor-1.0.1.tgz",
++      "integrity": "sha512-9aZLIrhRaD97sgVhtJOW6ckOEh6/GnvQtdVNfdZ6s67+3/XwLS9lBcQYzEEhYVeUowN7pRzMLsyGhK2i/xvWbw==",
++      "license": "MIT OR SEE LICENSE IN FEEL-FREE.md",
++      "optional": true,
++      "engines": {
++        "node": ">= 0.8.15"
++      }
++    },
+     "node_modules/rimraf": {
+       "version": "3.0.2",
+       "resolved": "https://registry.npmjs.org/rimraf/-/rimraf-3.0.2.tgz",
+@@ -13485,6 +13679,16 @@
+         "node": "^18.17.0 || >=20.5.0"
+       }
+     },
++    "node_modules/stackblur-canvas": {
++      "version": "2.7.0",
++      "resolved": "https://registry.npmjs.org/stackblur-canvas/-/stackblur-canvas-2.7.0.tgz",
++      "integrity": "sha512-yf7OENo23AGJhBriGx0QivY5JP6Y1HbrrDI6WLt6C5auYZXlQrheoY8hD4ibekFKz1HOfE48Ww8kMWMnJD/zcQ==",
++      "license": "MIT",
++      "optional": true,
++      "engines": {
++        "node": ">=0.1.14"
++      }
++    },
+     "node_modules/statuses": {
+       "version": "2.0.1",
+       "resolved": "https://registry.npmjs.org/statuses/-/statuses-2.0.1.tgz",
+@@ -13672,6 +13876,16 @@
+         "url": "https://github.com/sponsors/ljharb"
+       }
+     },
++    "node_modules/svg-pathdata": {
++      "version": "6.0.3",
++      "resolved": "https://registry.npmjs.org/svg-pathdata/-/svg-pathdata-6.0.3.tgz",
++      "integrity": "sha512-qsjeeq5YjBZ5eMdFuUa4ZosMLxgr5RZ+F+Y1OrDhuOCEInRMA3x74XdBtggJcj9kOeInz0WE+LgCPDkZFlBYJw==",
++      "license": "MIT",
++      "optional": true,
++      "engines": {
++        "node": ">=12.0.0"
++      }
++    },
+     "node_modules/symbol-observable": {
+       "version": "4.0.0",
+       "resolved": "https://registry.npmjs.org/symbol-observable/-/symbol-observable-4.0.0.tgz",
+@@ -13851,6 +14065,16 @@
+         }
+       }
+     },
++    "node_modules/text-segmentation": {
++      "version": "1.0.3",
++      "resolved": "https://registry.npmjs.org/text-segmentation/-/text-segmentation-1.0.3.tgz",
++      "integrity": "sha512-iOiPUo/BGnZ6+54OsWxZidGCsdU8YbE4PSpdPinp7DeMtUJNJBoJ/ouUSTJjHkh1KntHaltHl/gDs2FC4i5+Nw==",
++      "license": "MIT",
++      "optional": true,
++      "dependencies": {
++        "utrie": "^1.0.2"
++      }
++    },
+     "node_modules/thingies": {
+       "version": "2.5.0",
+       "resolved": "https://registry.npmjs.org/thingies/-/thingies-2.5.0.tgz",
+@@ -14235,6 +14459,16 @@
+         "node": ">= 0.4.0"
+       }
+     },
++    "node_modules/utrie": {
++      "version": "1.0.2",
++      "resolved": "https://registry.npmjs.org/utrie/-/utrie-1.0.2.tgz",
++      "integrity": "sha512-1MLa5ouZiOmQzUbjbu9VmjLzn1QLXBhwpUa7kdLUQK+KQ5KA9I1vk5U4YHe/X2Ch7PYnJfWuWT+VbuxbGwljhw==",
++      "license": "MIT",
++      "optional": true,
++      "dependencies": {
++        "base64-arraybuffer": "^1.0.2"
++      }
++    },
+     "node_modules/uuid": {
+       "version": "8.3.2",
+       "resolved": "https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz",
+diff --git a/frontend/package.json b/frontend/package.json
+index 76dda530..37fa5a53 100644
+--- a/frontend/package.json
++++ b/frontend/package.json
+@@ -30,7 +30,10 @@
+     "@angular/platform-server": "^19.2.0",
+     "@angular/router": "^19.2.0",
+     "@angular/ssr": "^19.2.17",
++    "encuestas-fullstack": "file:..",
+     "express": "^4.18.2",
++    "jspdf": "^2.5.1",
++    "jspdf-autotable": "^3.5.31",
+     "rxjs": "~7.8.0",
+     "tslib": "^2.3.0",
+     "zone.js": "~0.15.0"
+diff --git a/frontend/src/app/components/administrador/administrador.component.css b/frontend/src/app/components/administrador/administrador.component.css
+index f3aff7c7..00cc4606 100644
+--- a/frontend/src/app/components/administrador/administrador.component.css
++++ b/frontend/src/app/components/administrador/administrador.component.css
+@@ -276,7 +276,6 @@
+   color: #212529;
+ }
+ 
+-/* Grid de encuestas */
+ .encuestas-grid {
+   display: grid;
+   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+@@ -398,8 +397,28 @@
+   background: none;
+   border: none;
+   font-size: 24px;
+-  cursor: pointer;
+-  color: #666;
++
++}
++
++/* Button grouping and color overrides for export buttons */
++.btn-group {
++  display: inline-flex;
++  gap: 10px;
++  align-items: center;
++}
++
++/* Make secondary export buttons dark blue and separated */
++.reporte-card .btn-group .btn-secondary,
++.card-actions .btn-group .btn-secondary,
++.btn-group .btn-secondary {
++  background: #0b3d91; /* azul oscuro */
++  color: #fff;
++  padding: 8px 14px;
++  border-radius: 6px;
++}
++
++.btn-group .btn-secondary:hover {
++  background: #082b66;
+ }
+ 
+ .user-form {
+diff --git a/frontend/src/app/components/administrador/administrador.component.html b/frontend/src/app/components/administrador/administrador.component.html
+index a757e11b..29301e68 100644
+--- a/frontend/src/app/components/administrador/administrador.component.html
++++ b/frontend/src/app/components/administrador/administrador.component.html
+@@ -10,25 +10,25 @@
+         (click)="cambiarVista('dashboard')" 
+         [class.active]="vistaActual === 'dashboard'"
+         class="nav-item">
+-        📊 Dashboard
++        Dashboard
+       </a>
+       <a 
+         (click)="cambiarVista('usuarios')" 
+         [class.active]="vistaActual === 'usuarios'"
+         class="nav-item">
+-        👥 Usuarios
++        Usuarios
+       </a>
+       <a 
+         (click)="cambiarVista('encuestas')" 
+         [class.active]="vistaActual === 'encuestas'"
+         class="nav-item">
+-        📋 Encuestas
++        Encuestas
+       </a>
+       <a 
+         (click)="cambiarVista('reportes')" 
+         [class.active]="vistaActual === 'reportes'"
+         class="nav-item">
+-        📈 Reportes
++        Reportes
+       </a>
+     </nav>
+   </div>
+@@ -182,19 +182,28 @@
+         <div class="reporte-card">
+           <h4>Reporte de Usuarios</h4>
+           <p>Estadísticas detalladas de usuarios registrados y su actividad</p>
+-          <button class="btn-primary" (click)="exportarReportes()">Generar Reporte</button>
++          <div class="btn-group">
++            <button class="btn-primary" (click)="$any(exportarReportes)('usuarios','csv')">Generar Reporte</button>
++            <button class="btn-secondary" (click)="$any(exportarReportes)('usuarios','pdf')">Exportar PDF</button>
++          </div>
+         </div>
+         
+         <div class="reporte-card">
+           <h4>Reporte de Encuestas</h4>
+           <p>Análisis de encuestas creadas, respuestas y tendencias</p>
+-          <button class="btn-primary" (click)="exportarReportes()">Generar Reporte</button>
++          <div class="btn-group">
++            <button class="btn-primary" (click)="$any(exportarReportes)('encuestas','csv')">Generar Reporte</button>
++            <button class="btn-secondary" (click)="$any(exportarReportes)('encuestas','pdf')">Exportar PDF</button>
++          </div>
+         </div>
+         
+         <div class="reporte-card">
+           <h4>Reporte de Actividad</h4>
+           <p>Seguimiento de la actividad del sistema en tiempo real</p>
+-          <button class="btn-primary" (click)="exportarReportes()">Generar Reporte</button>
++          <div class="btn-group">
++            <button class="btn-primary" (click)="$any(exportarReportes)('actividad','csv')">Generar Reporte</button>
++            <button class="btn-secondary" (click)="$any(exportarReportes)('actividad','pdf')">Exportar PDF</button>
++          </div>
+         </div>
+       </div>
+     </div>
+diff --git a/frontend/src/app/components/administrador/administrador.component.ts b/frontend/src/app/components/administrador/administrador.component.ts
+index bbd5c54b..e65e2b2f 100644
+--- a/frontend/src/app/components/administrador/administrador.component.ts
++++ b/frontend/src/app/components/administrador/administrador.component.ts
+@@ -1,6 +1,9 @@
+ import { Component, OnInit } from '@angular/core';  // Herramientas para crear paginas
+ import { CommonModule } from '@angular/common';  // Funciones basicas que se usan siempre
+ import { FormsModule } from '@angular/forms';  // Para poder usar formularios con inputs
++import { EncuestasService, Encuesta as ServicioEncuesta, Usuario as ServicioUsuario, RespuestaCompleta } from '../../services/encuestas.service';
++import jsPDF from 'jspdf';
++import autoTable from 'jspdf-autotable';
+ 
+ // Estructura de datos para un usuario del sistema
+ interface Usuario {
+@@ -50,7 +53,7 @@ export class AdministradorComponent implements OnInit {
+   filtroUsuarios = '';                     // Texto para buscar usuarios
+   
+   // Variables para manejar la lista de encuestas
+-  encuestas: Encuesta[] = [];              // Lista completa de encuestas
++  encuestas: Encuesta[] = [];              // Lista completa de encuestas (sin preguntas)
+   encuestaSeleccionada: Encuesta | null = null;  // Encuesta que estamos editando
+   filtroEncuestas = '';                    // Texto para buscar encuestas
+ 
+@@ -58,12 +61,48 @@ export class AdministradorComponent implements OnInit {
+   nuevoUsuario: Partial<Usuario> = {};     // Datos del usuario que se esta creando
+   mostrarFormUsuario = false;              // Si se muestra o no el formulario
+ 
+-  // Este componente no necesita servicios externos
+-  constructor() {}
++  // Inyectar el servicio de encuestas para sincronizar datos
++  constructor(private encuestasService: EncuestasService) {}
+ 
+   ngOnInit(): void {
+     // Cuando se abre la pagina, cargar todos los datos
+     this.cargarDatos();
++
++    // Suscribirse a los observables del servicio para mantener sincronizados los datos
++    this.encuestasService.obtenerEncuestas().subscribe(es => {
++      // El servicio trae encuestas con preguntas; mapear a la forma usada por este componente
++      this.encuestas = es.map(e => ({
++        id: e.id,
++        titulo: e.titulo,
++        descripcion: e.descripcion,
++        fechaCreacion: e.fechaCreacion,
++        fechaLimite: e.fechaLimite,
++        estado: e.estado,
++        respuestas: 0 // se actualizará al suscribir respuestas
++      }));
++      this.actualizarEstadisticas();
++    });
++
++    this.encuestasService.obtenerRespuestas().subscribe(resps => {
++      // Contar respuestas por encuesta y actualizar el campo `respuestas` local
++      const counts: { [id: number]: number } = {};
++      resps.forEach(r => { counts[r.encuestaId] = (counts[r.encuestaId] || 0) + 1; });
++      this.encuestas = this.encuestas.map(e => ({ ...e, respuestas: counts[e.id] || 0 }));
++      this.actualizarEstadisticas();
++    });
++
++    this.encuestasService.obtenerUsuarios().subscribe(us => {
++      // Mapear usuarios del servicio al tipo local
++      this.usuarios = us.map(u => ({
++        id: u.id,
++        nombre: u.nombre,
++        email: u.email,
++        rol: u.rol,
++        fechaRegistro: u.fechaRegistro,
++        activo: u.activo
++      }));
++      this.actualizarEstadisticas();
++    });
+   }
+ 
+   cargarDatos(): void {
+@@ -74,49 +113,12 @@ export class AdministradorComponent implements OnInit {
+   }
+ 
+   cargarUsuarios(): void {
+-    // Datos de ejemplo
+-    this.usuarios = [
+-      {
+-        id: 1,
+-        nombre: 'Juan Pérez',
+-        email: 'juan.perez@universidad.edu',
+-        rol: 'encuestado',
+-        fechaRegistro: new Date('2024-01-15'),
+-        activo: true
+-      },
+-      {
+-        id: 3,
+-        nombre: 'Carlos López',
+-        email: 'carlos.lopez@universidad.edu',
+-        rol: 'directivo',
+-        fechaRegistro: new Date('2024-01-20'),
+-        activo: false
+-      }
+-    ];
++    // Ahora los usuarios se cargan desde el servicio `EncuestasService`.
++    // Esta función se mantiene por compatibilidad, pero no popula datos hardcodeados.
+   }
+ 
+   cargarEncuestas(): void {
+-  
+-    this.encuestas = [
+-      {
+-        id: 1,
+-        titulo: 'Satisfacción del Servicio',
+-        descripcion: 'Evaluación de servicios universitarios',
+-        fechaCreacion: new Date('2024-10-01'),
+-        fechaLimite: new Date('2024-10-31'),
+-        estado: 'activa',
+-        respuestas: 45
+-      },
+-      {
+-        id: 2,
+-        titulo: 'Evaluación de Servicio',
+-        descripcion: 'Evaluación de calidad del servicio',
+-        fechaCreacion: new Date('2024-09-15'),
+-        fechaLimite: new Date('2024-10-15'),
+-        estado: 'finalizada',
+-        respuestas: 123
+-      }
+-    ];
++    // Las encuestas se sincronizan desde `EncuestasService` (ver suscripciones en ngOnInit)
+   }
+ 
+   actualizarEstadisticas(): void {
+@@ -205,8 +207,146 @@ export class AdministradorComponent implements OnInit {
+     }
+   }
+ 
+-  exportarReportes(): void {
+-    console.log('Exportando reportes...');
+-    alert('Funcionalidad de exportación en desarrollo');
++  exportarReportes(): void;
++  exportarReportes(tipo: 'usuarios' | 'encuestas' | 'actividad' | 'all' = 'all', formato: 'csv' | 'json' | 'pdf' = 'csv'): void {
++    const fecha = new Date();
++
++    // Helper: descarga un Blob o texto como archivo
++    const descarga = (data: BlobPart, filename: string, mime = 'text/csv') => {
++      const blob = data instanceof Blob ? data : new Blob([data], { type: mime });
++      const url = window.URL.createObjectURL(blob);
++      const a = document.createElement('a');
++      a.href = url;
++      a.download = filename;
++      document.body.appendChild(a);
++      a.click();
++      a.remove();
++      window.URL.revokeObjectURL(url);
++    };
++
++    // Helper: convierte array de arrays a CSV
++    const toCSV = (rows: Array<Array<any>>, headers?: string[]) => {
++      const escapeCell = (v: any) => {
++        if (v === null || v === undefined) return '';
++        const s = String(v);
++        return s.includes(',') || s.includes('\n') || s.includes('"') ? '"' + s.replace(/"/g, '""') + '"' : s;
++      };
++      let out = '';
++      if (headers && headers.length) out += headers.map(escapeCell).join(',') + '\n';
++      out += rows.map(r => r.map(escapeCell).join(',')).join('\n');
++      return out;
++    };
++
++    if (formato === 'json') {
++      let payload: any = {};
++      if (tipo === 'usuarios') payload = this.usuarios;
++      else if (tipo === 'encuestas') payload = this.encuestas;
++      else if (tipo === 'actividad') payload = this.estadisticas;
++      else payload = { usuarios: this.usuarios, encuestas: this.encuestas, estadisticas: this.estadisticas };
++
++      descarga(JSON.stringify(payload, null, 2), `datos-${tipo}-${fecha.toISOString().slice(0,10)}.json`, 'application/json');
++      return;
++    }
++
++    if (formato === 'csv') {
++      if (tipo === 'usuarios') {
++        const headers = ['id', 'nombre', 'email', 'rol', 'fechaRegistro', 'activo'];
++        const rows = this.usuarios.map(u => [u.id, u.nombre, u.email, u.rol, u.fechaRegistro instanceof Date ? u.fechaRegistro.toISOString() : String(u.fechaRegistro), u.activo ? 'Activo' : 'Inactivo']);
++        const csv = toCSV(rows, headers);
++        descarga(csv, `usuarios-${fecha.toISOString().slice(0,10)}.csv`);
++        return;
++      }
++
++      if (tipo === 'encuestas') {
++        const headers = ['id', 'titulo', 'descripcion', 'fechaCreacion', 'fechaLimite', 'estado', 'respuestas'];
++        const rows = this.encuestas.map(e => [e.id, e.titulo, e.descripcion, e.fechaCreacion instanceof Date ? e.fechaCreacion.toISOString() : String(e.fechaCreacion), e.fechaLimite instanceof Date ? e.fechaLimite.toISOString() : String(e.fechaLimite), e.estado, e.respuestas]);
++        const csv = toCSV(rows, headers);
++        descarga(csv, `encuestas-${fecha.toISOString().slice(0,10)}.csv`);
++        return;
++      }
++
++      if (tipo === 'actividad') {
++        const headers = ['clave', 'valor'];
++        const rows = Object.entries(this.estadisticas).map(([k, v]) => [k, String(v)]);
++        const csv = toCSV(rows, headers);
++        descarga(csv, `estadisticas-${fecha.toISOString().slice(0,10)}.csv`);
++        return;
++      }
++
++      // default: export all as CSV (usuarios then encuestas then estadisticas)
++      const allRows: Array<Array<any>> = [];
++      allRows.push(['--- Usuarios ---']);
++      allRows.push(['id', 'nombre', 'email', 'rol', 'fechaRegistro', 'activo']);
++      this.usuarios.forEach(u => allRows.push([u.id, u.nombre, u.email, u.rol, u.fechaRegistro instanceof Date ? u.fechaRegistro.toISOString() : String(u.fechaRegistro), u.activo ? 'Activo' : 'Inactivo']));
++      allRows.push([]);
++      allRows.push(['--- Encuestas ---']);
++      allRows.push(['id', 'titulo', 'descripcion', 'fechaCreacion', 'fechaLimite', 'estado', 'respuestas']);
++      this.encuestas.forEach(e => allRows.push([e.id, e.titulo, e.descripcion, e.fechaCreacion instanceof Date ? e.fechaCreacion.toISOString() : String(e.fechaCreacion), e.fechaLimite instanceof Date ? e.fechaLimite.toISOString() : String(e.fechaLimite), e.estado, e.respuestas]));
++      allRows.push([]);
++      allRows.push(['--- Estadisticas ---']);
++      Object.entries(this.estadisticas).forEach(([k, v]) => allRows.push([k, String(v)]));
++
++      const csv = toCSV(allRows as any[]);
++      descarga(csv, `datos-todos-${fecha.toISOString().slice(0,10)}.csv`);
++      return;
++    }
++
++    if (formato === 'pdf') {
++      // Mantener la generación de PDF existente cuando se solicite
++      const doc = new jsPDF();
++      doc.setFontSize(18);
++      doc.text('Reporte de Encuestas - Administración', 14, 20);
++      doc.setFontSize(11);
++      doc.text(`Fecha: ${fecha.toLocaleString()}`, 14, 28);
++
++      const stats = [
++        ['Total Usuarios', String(this.estadisticas.totalUsuarios)],
++        ['Usuarios Activos', String(this.estadisticas.usuariosActivos)],
++        ['Total Encuestas', String(this.estadisticas.totalEncuestas)],
++        ['Encuestas Activas', String(this.estadisticas.encuestasActivas)],
++        ['Respuestas Hoy', String(this.estadisticas.respuestasHoy)],
++        ['Respuestas Total', String(this.estadisticas.respuestasTotal)]
++      ];
++
++      (autoTable as any)(doc, {
++        startY: 36,
++        head: [['Clave', 'Valor']],
++        body: stats,
++        theme: 'grid',
++        styles: { fontSize: 10 }
++      });
++
++      let finalY = (doc as any).lastAutoTable ? (doc as any).lastAutoTable.finalY + 8 : 60;
++
++      if (tipo === 'usuarios' || tipo === 'all') {
++        if (this.usuarios && this.usuarios.length) {
++          const usuariosBody = this.usuarios.map(u => [u.nombre, u.email, u.rol, u.activo ? 'Activo' : 'Inactivo']);
++          (autoTable as any)(doc, {
++            startY: finalY,
++            head: [['Nombre', 'Email', 'Rol', 'Estado']],
++            body: usuariosBody,
++            styles: { fontSize: 9 }
++          });
++          finalY = (doc as any).lastAutoTable.finalY + 8;
++        }
++      }
++
++      if (tipo === 'encuestas' || tipo === 'all') {
++        if (this.encuestas && this.encuestas.length) {
++          const encBody = this.encuestas.map(e => [e.titulo, e.estado, String(e.respuestas)]);
++          (autoTable as any)(doc, {
++            startY: finalY,
++            head: [['Título', 'Estado', 'Respuestas']],
++            body: encBody,
++            styles: { fontSize: 9 }
++          });
++          finalY = (doc as any).lastAutoTable.finalY + 8;
++        }
++      }
++
++      const filename = `reporte-encuestas-${fecha.toISOString().slice(0,10)}.pdf`;
++      doc.save(filename);
++      return;
++    }
+   }
+ }
+\ No newline at end of file
+diff --git a/frontend/src/app/components/directivo/directivo.component.html b/frontend/src/app/components/directivo/directivo.component.html
+index 8aa263d6..4c718abd 100644
+--- a/frontend/src/app/components/directivo/directivo.component.html
++++ b/frontend/src/app/components/directivo/directivo.component.html
+@@ -10,25 +10,25 @@
+         (click)="cambiarVista('dashboard')" 
+         [class.active]="vistaActual === 'dashboard'"
+         class="nav-item">
+-        📊 Dashboard Ejecutivo
++        Dashboard Ejecutivo
+       </a>
+       <a 
+         (click)="cambiarVista('reportes')" 
+         [class.active]="vistaActual === 'reportes'"
+         class="nav-item">
+-        📋 Reportes
++        Reportes
+       </a>
+       <a 
+         (click)="cambiarVista('metricas')" 
+         [class.active]="vistaActual === 'metricas'"
+         class="nav-item">
+-        📈 Métricas por Área
++        Métricas por Área
+       </a>
+       <a 
+         (click)="cambiarVista('configuracion')" 
+         [class.active]="vistaActual === 'configuracion'"
+         class="nav-item">
+-        ⚙️ Configuración
++        Configuración
+       </a>
+     </nav>
+     
+@@ -78,10 +78,9 @@
+             *ngFor="let area of metricasPorArea" 
+             class="area-card"
+             [class]="obtenerColorSatisfaccion(area.satisfaccion)">
+-            <div class="area-header">
+-              <h4>{{ area.area }}</h4>
+-              <span class="tendencia-icon">{{ obtenerIconoTendencia(area.tendencia) }}</span>
+-            </div>
++              <div class="area-header">
++                <h4>{{ area.area }}</h4>
++              </div>
+             <div class="area-satisfaccion">{{ area.satisfaccion }}%</div>
+             <div class="area-respuestas">{{ area.respuestas }} respuestas</div>
+           </div>
+@@ -93,16 +92,16 @@
+         <h3>Acciones Rápidas</h3>
+         <div class="acciones-grid">
+           <button class="accion-btn" (click)="generarReportePersonalizado()">
+-            📊 Generar Reporte Personalizado
++            Generar Reporte Personalizado
+           </button>
+           <button class="accion-btn" (click)="cambiarVista('reportes')">
+-            📋 Ver Todos los Reportes
++            Ver Todos los Reportes
+           </button>
+           <button class="accion-btn" (click)="cambiarVista('metricas')">
+-            📈 Análisis Detallado
++            Análisis Detallado
+           </button>
+           <button class="accion-btn" (click)="navegarAAdmin()">
+-            ⚙️ Panel de Administración
++            Panel de Administración
+           </button>
+         </div>
+       </div>
+@@ -132,7 +131,10 @@
+             
+             <div class="reporte-actions">
+               <button class="btn-outline" (click)="verReporte(reporte)">Ver Detalles</button>
+-              <button class="btn-secondary" (click)="exportarReporte(reporte)">Exportar</button>
++              <div class="btn-group">
++                <button class="btn-secondary" (click)="$any(exportarReporte)(reporte,'csv')">Exportar CSV</button>
++                <button class="btn-secondary" (click)="$any(exportarReporte)(reporte,'pdf')">Exportar PDF</button>
++              </div>
+             </div>
+           </div>
+         </div>
+@@ -143,9 +145,10 @@
+         <div class="detalle-header">
+           <button class="btn-volver" (click)="cerrarReporte()">← Volver</button>
+           <h3>{{ reporteSeleccionado.titulo }}</h3>
+-          <button class="btn-primary" (click)="exportarReporte(reporteSeleccionado)">
+-            📥 Exportar
+-          </button>
++          <div class="btn-group">
++            <button class="btn-primary" (click)="$any(exportarReporte)(reporteSeleccionado,'csv')">📥 Exportar CSV</button>
++            <button class="btn-primary" (click)="$any(exportarReporte)(reporteSeleccionado,'pdf')">📥 Exportar PDF</button>
++          </div>
+         </div>
+         
+         <div class="detalle-meta">
+diff --git a/frontend/src/app/components/directivo/directivo.component.ts b/frontend/src/app/components/directivo/directivo.component.ts
+index 4f1120fa..678b839b 100644
+--- a/frontend/src/app/components/directivo/directivo.component.ts
++++ b/frontend/src/app/components/directivo/directivo.component.ts
+@@ -2,6 +2,8 @@
+ import { CommonModule } from '@angular/common';  // Funciones basicas que se usan siempre
+ import { FormsModule } from '@angular/forms';  // Para poder usar formularios con inputs
+ import { Router } from '@angular/router';  // Para cambiar de pagina
++import jsPDF from 'jspdf';
++import autoTable from 'jspdf-autotable';
+ 
+ // Estructura de datos para un reporte generado
+ interface Reporte {
+@@ -124,9 +126,67 @@ export class DirectivoComponent implements OnInit {
+     this.reporteSeleccionado = null;
+   }
+ 
+-  exportarReporte(reporte: Reporte): void {
+-    console.log('Exportando reporte:', reporte.titulo);
+-    alert(`Exportando reporte: ${reporte.titulo}\nEsta funcionalidad se implementará próximamente.`);
++  exportarReporte(reporte: Reporte | null, formato: 'csv' | 'json' | 'pdf' = 'csv'): void {
++    if (!reporte) return;
++    const fecha = new Date();
++
++    const descarga = (data: BlobPart, filename: string, mime = 'text/csv') => {
++      const blob = data instanceof Blob ? data : new Blob([data], { type: mime });
++      const url = window.URL.createObjectURL(blob);
++      const a = document.createElement('a');
++      a.href = url;
++      a.download = filename;
++      document.body.appendChild(a);
++      a.click();
++      a.remove();
++      window.URL.revokeObjectURL(url);
++    };
++
++    if (formato === 'json') {
++      descarga(JSON.stringify(reporte, null, 2), `${reporte.titulo.replace(/\s+/g,'-')}-${fecha.toISOString().slice(0,10)}.json`, 'application/json');
++      return;
++    }
++
++    if (formato === 'csv') {
++      // Convertir objeto reporte.datos a CSV simple
++      const rows: string[] = [];
++      const headers = Object.keys(reporte.datos || {});
++      if (headers.length) {
++        rows.push(headers.join(','));
++        const values = headers.map(h => {
++          const v = reporte.datos[h];
++          if (v === null || v === undefined) return '';
++          return String(v).includes(',') || String(v).includes('\n') ? '"' + String(v).replace(/"/g,'""') + '"' : String(v);
++        });
++        rows.push(values.join(','));
++      } else {
++        rows.push('key,value');
++        for (const k of Object.keys(reporte.datos || {})) rows.push(`${k},${String((reporte.datos as any)[k])}`);
++      }
++      descarga(rows.join('\n'), `${reporte.titulo.replace(/\s+/g,'-')}-${fecha.toISOString().slice(0,10)}.csv`);
++      return;
++    }
++
++    if (formato === 'pdf') {
++      const doc = new jsPDF();
++      doc.setFontSize(16);
++      doc.text(reporte.titulo, 14, 20);
++      doc.setFontSize(10);
++      doc.text(`Generado: ${reporte.fechaGeneracion.toLocaleString()}`, 14, 28);
++
++      const dataEntries = Object.entries(reporte.datos || {});
++      const body = dataEntries.map(([k, v]) => [k, Array.isArray(v) ? JSON.stringify(v) : String(v)]);
++
++      (autoTable as any)(doc, {
++        startY: 36,
++        head: [['Clave', 'Valor']],
++        body,
++        styles: { fontSize: 9 }
++      });
++
++      doc.save(`${reporte.titulo.replace(/\s+/g,'-')}-${fecha.toISOString().slice(0,10)}.pdf`);
++      return;
++    }
+   }
+ 
+   generarReportePersonalizado(): void {
+@@ -140,12 +200,8 @@ export class DirectivoComponent implements OnInit {
+   }
+ 
+   obtenerIconoTendencia(tendencia: string): string {
+-    switch(tendencia) {
+-      case 'subiendo': return '📈';
+-      case 'bajando': return '📉';
+-      case 'estable': return '➡️';
+-      default: return '📊';
+-    }
++    // No mostrar iconos gráficos; devolver cadena vacía para mantener compatibilidad
++    return '';
+   }
+ 
+   obtenerColorSatisfaccion(satisfaccion: number): string {
+diff --git a/frontend/src/app/components/home/home.component.html b/frontend/src/app/components/home/home.component.html
+index 9f7ccde0..d1a5ed84 100644
+--- a/frontend/src/app/components/home/home.component.html
++++ b/frontend/src/app/components/home/home.component.html
+@@ -2,7 +2,7 @@
+   <!-- Seccion principal para usuarios no autenticados -->
+   <div class="hero-section" *ngIf="!isAuthenticated()">
+     <div class="hero-content">
+-      <h1 class="hero-title">📊 Sistema de Encuestas</h1>
++      <h1 class="hero-title">Sistema de Encuestas</h1>
+       <p class="hero-subtitle">Plataforma integral para la gestión y análisis de encuestas institucionales</p>
+       <p class="hero-description">
+         Bienvenido al sistema de encuestas. Para acceder a las funcionalidades completas y responder encuestas, 
+@@ -11,10 +11,10 @@
+       
+       <div class="hero-actions">
+         <button class="btn-primary large" (click)="navegarA('/login')">
+-          🔐 Iniciar Sesión
++          Iniciar Sesión
+         </button>
+         <button class="btn-secondary large" onclick="alert('Funcionalidad de información pública')">
+-          📋 Información Pública
++          Información Pública
+         </button>
+       </div>
+     </div>
+@@ -40,7 +40,7 @@
+   <!-- Seccion principal para usuarios autenticados -->
+   <div class="hero-section" *ngIf="isAuthenticated()">
+     <div class="hero-content">
+-      <h1 class="hero-title">¡Bienvenido, {{ getUserName() }}! �</h1>
++      <h1 class="hero-title">¡Bienvenido, {{ getUserName() }}!</h1>
+       <p class="hero-subtitle">Panel principal del Sistema de Encuestas</p>
+       <p class="hero-description">
+         Tienes acceso como <strong>{{ getUserRole() }}</strong>. 
+@@ -49,13 +49,13 @@
+       
+       <div class="hero-actions">
+         <button class="btn-primary large" (click)="navegarA('/encuestas')">
+-          📋 Ver Encuestas
++          Ver Encuestas
+         </button>
+         <button class="btn-secondary large" (click)="navegarA('/administrador')" *ngIf="getUserRole() === 'admin' || getUserRole() === 'administrador'">
+-          ⚙️ Administración
++          Administración
+         </button>
+         <button class="btn-secondary large" (click)="navegarA('/directivo')" *ngIf="getUserRole() === 'directivo'">
+-          📊 Panel Directivo
++          Panel Directivo
+         </button>
+       </div>
+     </div>
+@@ -63,7 +63,7 @@
+     <div class="hero-visual">
+       <div class="stats-preview">
+         <div class="stat-item">
+-          <div class="stat-number">✅</div>
++          <div class="stat-number">●</div>
+           <div class="stat-label">Autenticado</div>
+         </div>
+         <div class="stat-item">
+@@ -71,7 +71,7 @@
+           <div class="stat-label">Rol Actual</div>
+         </div>
+         <div class="stat-item">
+-          <div class="stat-number">🎯</div>
++          <div class="stat-number">●</div>
+           <div class="stat-label">Activo</div>
+         </div>
+       </div>
+@@ -84,37 +84,31 @@
+       
+       <div class="features-grid">
+         <div class="feature-card">
+-          <div class="feature-icon">📊</div>
+           <h3>Dashboard Interactivo</h3>
+           <p>Visualiza métricas y estadísticas en tiempo real con gráficos intuitivos y fáciles de interpretar.</p>
+         </div>
+         
+         <div class="feature-card">
+-          <div class="feature-icon">📋</div>
+           <h3>Gestión de Encuestas</h3>
+           <p>Crea, administra y despliega encuestas personalizadas con múltiples tipos de preguntas.</p>
+         </div>
+         
+         <div class="feature-card">
+-          <div class="feature-icon">👥</div>
+           <h3>Gestión de Usuarios</h3>
+           <p>Sistema de roles completo para encuestados, directivos y administradores.</p>
+         </div>
+         
+         <div class="feature-card">
+-          <div class="feature-icon">📈</div>
+           <h3>Análisis Avanzado</h3>
+           <p>Reportes detallados y análisis de tendencias para la toma de decisiones informadas.</p>
+         </div>
+         
+         <div class="feature-card">
+-          <div class="feature-icon">🔒</div>
+           <h3>Seguridad</h3>
+           <p>Protección de datos y autenticación segura para garantizar la confidencialidad.</p>
+         </div>
+         
+         <div class="feature-card">
+-          <div class="feature-icon">📱</div>
+           <h3>Responsive</h3>
+           <p>Acceso desde cualquier dispositivo con interfaz optimizada para móviles y tablets.</p>
+         </div>
+diff --git a/frontend/src/app/components/navbar/navbar.component.html b/frontend/src/app/components/navbar/navbar.component.html
+index 192714c0..bf6dee24 100644
+--- a/frontend/src/app/components/navbar/navbar.component.html
++++ b/frontend/src/app/components/navbar/navbar.component.html
+@@ -3,7 +3,6 @@
+     
+     <!-- Logo y titulo -->
+     <div class="navbar-brand" (click)="navigate('/home')">
+-      <div class="brand-icon">📊</div>
+       <span class="brand-text">Sistema de Encuestas</span>
+     </div>
+ 
+@@ -14,7 +13,6 @@
+         (click)="navigate(item.route)"
+         [class.active]="isActiveRoute(item.route)"
+         class="menu-item">
+-        <span class="item-icon">{{ item.icon }}</span>
+         <span class="item-text">{{ item.label }}</span>
+       </a>
+     </div>
+@@ -24,21 +22,18 @@
+       
+       <!-- Boton de cerrar sesion prominente -->
+       <button class="logout-main-btn" (click)="logout()" title="Cerrar Sesión">
+-        <span class="logout-icon">🚪</span>
+         <span class="logout-text">Salir</span>
+       </button>
+       
+       <!-- Informacion del usuario -->
+       <div class="user-info">
+         <div class="user-avatar">
+-          <img [src]="currentUser.avatar" [alt]="currentUser.nombre">
++          <img *ngIf="avatarValid && currentUser?.avatar" (error)="onAvatarError()" [src]="currentUser.avatar" [alt]="currentUser.nombre">
++          <div *ngIf="!avatarValid || !currentUser?.avatar" class="avatar-placeholder">{{ getUserInitial() }}</div>
+         </div>
+         <div class="user-details">
+           <div class="user-name">{{ getUserName() }}</div>
+-          <div class="user-role">
+-            <span class="role-icon">{{ getRoleIcon() }}</span>
+-            {{ getRoleDisplayName() }}
+-          </div>
++          <div class="user-role">{{ getRoleDisplayName() }}</div>
+         </div>
+       </div>
+ 
+@@ -51,7 +46,8 @@
+         <div class="user-dropdown" [class.open]="isMenuOpen">
+           <div class="dropdown-header">
+             <div class="dropdown-user">
+-              <img [src]="currentUser.avatar" [alt]="currentUser.nombre" class="dropdown-avatar">
++              <img *ngIf="avatarValid && currentUser?.avatar" (error)="onAvatarError()" [src]="currentUser.avatar" [alt]="currentUser.nombre" class="dropdown-avatar">
++              <div *ngIf="!avatarValid || !currentUser?.avatar" class="dropdown-avatar avatar-placeholder">{{ getUserInitial() }}</div>
+               <div>
+                 <div class="dropdown-name">{{ currentUser.nombre }}</div>
+                 <div class="dropdown-role">{{ getRoleDisplayName() }}</div>
+@@ -67,7 +63,6 @@
+               (click)="navigate(item.route)"
+               [class.active]="isActiveRoute(item.route)"
+               class="dropdown-item">
+-              <span class="item-icon">{{ item.icon }}</span>
+               {{ item.label }}
+             </a>
+           </div>
+@@ -76,7 +71,6 @@
+           
+           <div class="dropdown-actions">
+             <button class="dropdown-item logout-btn" (click)="logout()">
+-              <span class="item-icon">🚪</span>
+               Cerrar Sesión
+             </button>
+           </div>
+@@ -98,7 +92,8 @@
+   <div class="mobile-menu" [class.open]="isMenuOpen">
+     <div class="mobile-menu-content">
+       <div class="mobile-user-info">
+-        <img [src]="currentUser.avatar" [alt]="currentUser.nombre" class="mobile-avatar">
++        <img *ngIf="avatarValid && currentUser?.avatar" (error)="onAvatarError()" [src]="currentUser.avatar" [alt]="currentUser.nombre" class="mobile-avatar">
++        <div *ngIf="!avatarValid || !currentUser?.avatar" class="mobile-avatar avatar-placeholder">{{ getUserInitial() }}</div>
+         <div class="mobile-user-details">
+           <div class="mobile-user-name">{{ currentUser.nombre }}</div>
+           <div class="mobile-user-role">{{ getRoleDisplayName() }}</div>
+@@ -113,7 +108,6 @@
+           (click)="navigate(item.route)"
+           [class.active]="isActiveRoute(item.route)"
+           class="mobile-menu-item">
+-          <span class="mobile-item-icon">{{ item.icon }}</span>
+           <span class="mobile-item-text">{{ item.label }}</span>
+         </a>
+       </div>
+@@ -121,7 +115,6 @@
+       <div class="mobile-menu-divider"></div>
+       
+       <button class="mobile-logout-btn" (click)="logout()">
+-        <span class="mobile-item-icon">🚪</span>
+         <span class="mobile-item-text">Cerrar Sesión</span>
+       </button>
+     </div>
+diff --git a/frontend/src/app/components/navbar/navbar.component.ts b/frontend/src/app/components/navbar/navbar.component.ts
+index a187ec7a..53f2df53 100644
+--- a/frontend/src/app/components/navbar/navbar.component.ts
++++ b/frontend/src/app/components/navbar/navbar.component.ts
+@@ -27,31 +27,32 @@ export class NavbarComponent implements OnInit {
+   
+   // Informacion del usuario que esta usando el sistema
+   currentUser: any = null;
++  avatarValid = true;
+ 
+   // Lista de todas las opciones del menu
+   menuItems: MenuItem[] = [
+     {
+       label: 'Inicio',
+       route: '/home',
+-      icon: '🏠',
++      icon: '',
+       roles: ['encuestado', 'directivo', 'administrador']  // Todos pueden ver inicio
+     },
+     {
+       label: 'Encuestas',
+       route: '/encuestas',
+-      icon: '📋',
++      icon: '',
+       roles: ['encuestado', 'directivo', 'administrador']  // Todos pueden ver encuestas
+     },
+     {
+       label: 'Panel Directivo',
+       route: '/directivo',
+-      icon: '📊',
++      icon: '',
+       roles: ['directivo', 'administrador']  // Solo directivos y administradores
+     },
+     {
+       label: 'Administración',
+       route: '/administrador',
+-      icon: '⚙️',
++      icon: '',
+       roles: ['administrador']  // Solo administradores
+     }
+   ];
+@@ -90,20 +91,44 @@ export class NavbarComponent implements OnInit {
+         this.currentUser = {
+           id: Date.now(),
+           usuario: localStorage.getItem('userName') || 'Usuario',
++          nombre: localStorage.getItem('userName') || 'Usuario',
+           role: this.securityService.getUserRole(),
+-          avatar: 'https://via.placeholder.com/40x40/007bff/white?text=' + 
++          avatar: 'https://via.placeholder.com/40x40/007bff/white?text=' +
+                   (localStorage.getItem('userName')?.charAt(0).toUpperCase() || 'U')
+         };
+-      } else if (!this.currentUser.avatar) {
+-        // Agregar avatar si no existe
+-        this.currentUser.avatar = 'https://via.placeholder.com/40x40/007bff/white?text=' + 
+-                                  (this.currentUser.usuario?.charAt(0).toUpperCase() || 'U');
++      } else {
++        // Si existe el usuario pero falta avatar, creamos un placeholder
++        if (!this.currentUser.avatar) {
++          // Asegurar que existan las propiedades `usuario` y `nombre`
++          if (!this.currentUser.usuario && this.currentUser.nombre) {
++            this.currentUser.usuario = this.currentUser.nombre;
++          }
++          if (!this.currentUser.nombre && this.currentUser.usuario) {
++            this.currentUser.nombre = this.currentUser.usuario;
++          }
++
++          this.currentUser.avatar = 'https://via.placeholder.com/40x40/007bff/white?text=' +
++                                    ((this.currentUser.nombre || this.currentUser.usuario)?.charAt(0).toUpperCase() || 'U');
++        }
+       }
++
++      // Determinar si el avatar es válido
++      this.avatarValid = this.isAvatarValid(this.currentUser?.avatar);
+     } else {
+       this.currentUser = null;
++      this.avatarValid = false;
+     }
+   }
+ 
++  // Validar URL de avatar (filtrar 'undefined', 'null' y cadenas vacías)
++  private isAvatarValid(url?: string): boolean {
++    if (!url || typeof url !== 'string') return false;
++    const trimmed = url.trim();
++    if (trimmed === '') return false;
++    if (/undefined|null/i.test(trimmed)) return false;
++    return true;
++  }
++
+   get visibleMenuItems(): MenuItem[] {
+     if (!this.currentUser) return [];
+     
+@@ -158,18 +183,23 @@ export class NavbarComponent implements OnInit {
+   }
+ 
+   getRoleIcon(): string {
+-    const role = this.securityService.getUserRole();
+-    const roleIcons: { [key: string]: string } = {
+-      'user': '👤',
+-      'directivo': '👔',
+-      'admin': '👨‍💻',
+-      'administrador': '👨‍💻'
+-    };
+-    return roleIcons[role] || '👤';
++    // No mostrar icono de rol — devolver cadena vacía para mantener compatibilidad
++    return '';
+   }
+ 
+   getUserName(): string {
+-    return this.currentUser?.usuario || 'Usuario';
++    // Preferir la propiedad `nombre`, si no existe caer a `usuario`.
++    return this.currentUser?.nombre || this.currentUser?.usuario || 'Usuario';
++  }
++
++  // Inicial del nombre de usuario para usar en placeholders
++  getUserInitial(): string {
++    const name = this.getUserName();
++    return (name && name.length > 0) ? name.charAt(0).toUpperCase() : 'U';
++  }
++
++  onAvatarError(): void {
++    this.avatarValid = false;
+   }
+ 
+   // Verificar si el usuario esta autenticado
+diff --git a/frontend/src/app/services/encuestas.service.ts b/frontend/src/app/services/encuestas.service.ts
+index f1c9326e..e31a2b5e 100644
+--- a/frontend/src/app/services/encuestas.service.ts
++++ b/frontend/src/app/services/encuestas.service.ts
+@@ -107,13 +107,14 @@ export class EncuestasService {
+     ];
+ 
+     // Datos iniciales de encuestas
++    const fechaComun = new Date('2025-12-31');
+     const encuestasIniciales: Encuesta[] = [
+       {
+         id: 1,
+         titulo: 'Satisfacción del Servicio',
+         descripcion: 'Encuesta para evaluar la calidad del servicio prestado',
+         fechaCreacion: new Date('2025-10-01'),
+-        fechaLimite: new Date('2025-12-31'),
++        fechaLimite: fechaComun,
+         estado: 'activa',
+         creadorId: 4,
+         preguntas: [
+@@ -143,7 +144,7 @@ export class EncuestasService {
+         titulo: 'Evaluación de Capacitación',
+         descripcion: 'Encuesta post-capacitación para evaluar efectividad',
+         fechaCreacion: new Date('2025-09-15'),
+-        fechaLimite: new Date('2025-11-15'),
++        fechaLimite: fechaComun,
+         estado: 'activa',
+         creadorId: 2,
+         preguntas: [
+@@ -161,6 +162,57 @@ export class EncuestasService {
+             requerida: true
+           }
+         ]
++      },
++      {
++        id: 3,
++        titulo: 'Encuesta de Clima Laboral',
++        descripcion: 'Medir la percepción del ambiente de trabajo',
++        fechaCreacion: new Date('2025-10-10'),
++        fechaLimite: fechaComun,
++        estado: 'activa',
++        creadorId: 4,
++        preguntas: [
++          { id: 6, texto: '¿Se siente valorado en su trabajo?', tipo: 'multiple', opciones: ['Sí','A veces','No'], requerida: true },
++          { id: 7, texto: '¿Qué mejorarías del ambiente laboral?', tipo: 'abierta', requerida: false }
++        ]
++      },
++      {
++        id: 4,
++        titulo: 'Uso de Herramientas Digitales',
++        descripcion: 'Analizar la adopción de herramientas tecnológicas',
++        fechaCreacion: new Date('2025-10-12'),
++        fechaLimite: fechaComun,
++        estado: 'activa',
++        creadorId: 3,
++        preguntas: [
++          { id: 8, texto: '¿Usa las herramientas proporcionadas regularmente?', tipo: 'multiple', opciones: ['Sí','No'], requerida: true },
++          { id: 9, texto: '¿Qué herramienta considera más útil?', tipo: 'abierta', requerida: false }
++        ]
++      },
++      {
++        id: 5,
++        titulo: 'Satisfacción con Atención al Cliente',
++        descripcion: 'Opiniones sobre el soporte y atención al cliente',
++        fechaCreacion: new Date('2025-10-20'),
++        fechaLimite: fechaComun,
++        estado: 'activa',
++        creadorId: 4,
++        preguntas: [
++          { id: 10, texto: '¿La atención fue oportuna?', tipo: 'multiple', opciones: ['Sí','No'], requerida: true },
++          { id: 11, texto: 'Comentarios adicionales', tipo: 'abierta', requerida: false }
++        ]
++      },
++      {
++        id: 6,
++        titulo: 'Preferencias de Comunicación',
++        descripcion: 'Conocer canales preferidos para comunicaciones internas',
++        fechaCreacion: new Date('2025-10-25'),
++        fechaLimite: fechaComun,
++        estado: 'activa',
++        creadorId: 2,
++        preguntas: [
++          { id: 12, texto: '¿Qué canal prefiere para noticias internas?', tipo: 'multiple', opciones: ['Email','Intranet','WhatsApp','Otro'], requerida: true }
++        ]
+       }
+     ];
+ 
+diff --git a/frontend/src/styles.css b/frontend/src/styles.css
+index 69b59709..6640e68e 100644
+--- a/frontend/src/styles.css
++++ b/frontend/src/styles.css
+@@ -137,3 +137,4 @@ textarea:focus {
+   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+ }
+ 
++
+-- 
+2.42.0.windows.2
+

@@ -136,3 +136,35 @@ textarea:focus {
   border-color: var(--secondary-blue);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
+
+/* Footer: usar el mismo azul/degradado del home */
+footer,
+.footer,
+.app-footer,
+.site-footer,
+.sidebar-footer,
+.encuesta-footer {
+  /* Color sólido aplicado según solicitud */
+  background-color: #0d4bbd;
+  color: var(--white);
+  padding: 16px 24px;
+}
+
+footer a,
+.footer a,
+.app-footer a,
+.site-footer a,
+.sidebar-footer a,
+.encuesta-footer a {
+  color: var(--white);
+  text-decoration: underline;
+}
+
+footer a:hover,
+.footer a:hover,
+.app-footer a:hover,
+.site-footer a:hover,
+.sidebar-footer a:hover,
+.encuesta-footer a:hover {
+  color: var(--pale-blue);
+}
