@@ -40,3 +40,12 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Frontend/backend build artifacts and dependencies
+/frontend/node_modules/
+/backend/node_modules/
+/frontend/.angular/
+/backend/.angular/
+
+# Ignore package locks inside node_modules
+/frontend/node_modules/**/package-lock.json
